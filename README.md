@@ -72,21 +72,23 @@
     }
 
     button.operator {
-      background: linear-gradient(145deg, #007BFF, #0056b3);
+      background: linear-gradient(145deg, #1f4f78, #133a59);
     }
 
     button.operator:hover {
-      background: linear-gradient(145deg, #009dff, #0056b3);
+      background: linear-gradient(145deg, #2a6ca1, #1a4f77);
       transform: translateY(-4px);
-      box-shadow: 0 0 12px #00aaff, 0 0 24px #007BFF;
+      box-shadow: 0 0 12px #009dff, 0 0 18px #007BFF;
     }
 
     button.equals {
-      background: linear-gradient(145deg, #007BFF, #0056b3);
+      background: linear-gradient(145deg, #1f4f78, #133a59);
     }
 
     button.equals:hover {
-      background: linear-gradient(145deg, #009dff, #0056b3);
+      background: linear-gradient(145deg, #2a6ca1, #1a4f77);
+      transform: translateY(-4px);
+      box-shadow: 0 0 12px #009dff, 0 0 18px #007BFF;
     }
 
     button.clear {
