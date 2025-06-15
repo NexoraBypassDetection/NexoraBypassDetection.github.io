@@ -1,4 +1,4 @@
-Hey chatgpt! Ive made my own website code, but i wanna make it actually to work with real purchases, how do i make that "<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -316,7 +316,7 @@ Hey chatgpt! Ive made my own website code, but i wanna make it actually to work 
           body: JSON.stringify(payload)
         });
 
-        if (!response.ok) throw new Error(`Webhook error: ${response.status}`);
+        if (!response.ok) throw new Error(Webhook error: ${response.status});
 
         closeModal();
         openVerificationModal();
@@ -337,4 +337,4 @@ Hey chatgpt! Ive made my own website code, but i wanna make it actually to work 
     });
   </script>
 </body>
-</html>"
+</html>
