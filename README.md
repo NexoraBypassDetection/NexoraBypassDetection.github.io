@@ -1,536 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Keys Shop - Discord & Roblox Username Input</title>
-  <style>
-    /* Reset & basics */
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0a2342, #142850);
-      color: #e0e6f1;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding: 40px 20px;
-      position: relative;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shop with Verification Modal</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0; padding: 20px;
+    background: #f5f5f5;
+  }
 
-    .shop-container {
-      max-width: 900px;
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
-      gap: 30px;
-    }
+  .product-list {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
 
-    .product-card {
-      background: #1e2a47;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(20,40,80,0.6);
-      padding: 24px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      border: 1px solid #2a3b67;
-      user-select: none;
-    }
+  .product {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+    padding: 15px;
+    width: 150px;
+    text-align: center;
+  }
 
-    .product-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 18px 40px rgba(30,60,110,0.85);
-      border-color: #3b82f6;
-    }
+  .purchase-button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #22c55e;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  .purchase-button:hover:not(:disabled) {
+    background-color: #16a34a;
+  }
+  .purchase-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 
-    .product-title {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin: 0 0 14px 0;
-      color: #cbd5e1;
-    }
+  /* Cart Icon */
+  #cartLogo {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #22c55e;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    z-index: 10000;
+  }
+  #cartLogo:focus {
+    outline: 2px solid #16a34a;
+  }
 
-    .product-price {
-      font-size: 1.2rem;
-      margin-bottom: 28px;
-      color: #94a3b8;
-    }
+  /* Cart Modal */
+  #cartModal {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    width: 300px;
+    max-height: 400px;
+    background: white;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+    border-radius: 10px;
+    overflow-y: auto;
+    display: none;
+    flex-direction: column;
+    z-index: 9999;
+  }
+  #cartModal.active {
+    display: flex;
+  }
+  #cartCloseBtn {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    font-size: 20px;
+    margin: 10px;
+    cursor: pointer;
+  }
+  #cartItems {
+    padding: 10px 20px 20px 20px;
+    flex-grow: 1;
+  }
+  #cartItems p {
+    margin: 8px 0;
+  }
 
-    .purchase-button {
-      background: #3b82f6;
-      border: none;
-      border-radius: 14px;
-      padding: 16px 0;
-      color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 6px 12px rgba(59,130,246,0.5);
-      user-select: none;
-    }
+  /* Username Modal */
+  #usernameModal {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+  }
+  #usernameModal.active {
+    display: flex;
+  }
+  .modal-content {
+    background: white;
+    border-radius: 10px;
+    padding: 25px 30px;
+    width: 320px;
+    box-shadow: 0 4px 20px rgb(0 0 0 / 0.25);
+    text-align: center;
+  }
+  .modal-content h2 {
+    margin-top: 0;
+  }
+  .modal-content input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    margin: 15px 0 20px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  .modal-content button {
+    background-color: #22c55e;
+    border: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+  }
+  .modal-content button:disabled {
+    background-color: #a5d6a7;
+    cursor: not-allowed;
+  }
 
-    .purchase-button:hover {
-      background: #2563eb;
-      box-shadow: 0 10px 24px rgba(37,99,235,0.7);
-    }
-
-    .purchase-button:active {
-      background: #1e40af;
-      box-shadow: 0 4px 10px rgba(30,64,175,0.8);
-      transform: scale(0.96);
-    }
-
-    /* Modal styles */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(10, 35, 75, 0.85);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
+  /* Notification */
+  #notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #22c55e;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgb(0 0 0 / 0.2);
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    z-index: 10002;
+    user-select: none;
+    cursor: default;
+    animation: slideIn 0.3s ease forwards;
+  }
+  #notification .notification-icon {
+    font-size: 1.3em;
+  }
+  @keyframes slideIn {
+    from {
       opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
+      transform: translateX(-50%) translateY(20px);
     }
-    .modal-overlay.active {
+    to {
       opacity: 1;
-      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
     }
-
-    .modal {
-      background: #1e2a47;
-      border-radius: 16px;
-      padding: 30px 28px;
-      width: 320px;
-      box-shadow: 0 12px 30px rgba(20,40,80,0.9);
-      display: flex;
-      flex-direction: column;
-      user-select: none;
-      position: relative;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-
-    .modal h3 {
-      color: #cbd5e1;
-      margin: 0 0 16px 0;
-      font-weight: 700;
-      font-size: 1.5rem;
-      text-align: center;
-    }
-
-    .modal p {
-      color: #94a3b8;
-      font-size: 0.9rem;
-      margin: 0 0 24px 0;
-      text-align: center;
-    }
-
-    .modal input[type="text"] {
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: none;
-      font-size: 1rem;
-      outline: none;
-      background: #2a3b67;
-      color: #e0e6f1;
-      box-shadow: inset 0 0 6px rgba(20,40,80,0.9);
-      margin-bottom: 16px;
-      user-select: text;
-    }
-
-    .modal input::placeholder {
-      color: #718096;
-    }
-
-    .modal button.submit-button,
-    .modal button.ok-button {
-      background: #3b82f6;
-      border: none;
-      border-radius: 14px;
-      padding: 14px 0;
-      color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 6px 12px rgba(59,130,246,0.6);
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      user-select: none;
-    }
-
-    .modal button.submit-button:hover,
-    .modal button.ok-button:hover {
-      background: #2563eb;
-      box-shadow: 0 10px 24px rgba(37,99,235,0.8);
-    }
-
-    .modal button.submit-button:active,
-    .modal button.ok-button:active {
-      background: #1e40af;
-      box-shadow: 0 4px 10px rgba(30,64,175,0.9);
-      transform: scale(0.96);
-    }
-
-    .modal button.submit-button:disabled {
-      background: #94a3b8;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
-
-    .modal .close-button {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      background: transparent;
-      border: none;
-      font-size: 1.5rem;
-      color: #94a3b8;
-      cursor: pointer;
-      user-select: none;
-      transition: color 0.2s ease;
-    }
-    .modal .close-button:hover {
-      color: #cbd5e1;
-    }
-
-    /* Cart logo fixed on side */
-    #cartLogo {
-      position: fixed;
-      top: 50%;
-      right: 10px;
-      transform: translateY(-50%);
-      background: #3b82f6;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(59,130,246,0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      user-select: none;
-      z-index: 1100;
-      transition: background-color 0.3s ease;
-    }
-    #cartLogo:hover {
-      background: #2563eb;
-      box-shadow: 0 6px 14px rgba(37,99,235,0.8);
-    }
-    #cartLogo svg {
-      fill: white;
-      width: 24px;
-      height: 24px;
-    }
-
-    /* Cart modal styles */
-    #cartModal {
-      position: fixed;
-      top: 50%;
-      right: 70px;
-      transform: translateY(-50%);
-      background: #1e2a47;
-      border-radius: 16px;
-      width: 320px;
-      max-height: 80vh;
-      box-shadow: 0 12px 30px rgba(20,40,80,0.9);
-      z-index: 1050;
-      display: none;
-      flex-direction: column;
-      padding: 20px 24px;
-      overflow-y: auto;
-      user-select: none;
-    }
-
-    #cartModal.active {
-      display: flex;
-    }
-
-    #cartModal h3 {
-      margin: 0 0 16px 0;
-      color: #cbd5e1;
-      font-weight: 700;
-      font-size: 1.4rem;
-      text-align: center;
-      position: relative;
-    }
-
-    #cartCloseBtn {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      background: transparent;
-      border: none;
-      font-size: 1.5rem;
-      color: #94a3b8;
-      cursor: pointer;
-      user-select: none;
-      transition: color 0.2s ease;
-    }
-    #cartCloseBtn:hover {
-      color: #cbd5e1;
-    }
-
-    #cartItems {
-      flex-grow: 1;
-      overflow-y: auto;
-      margin-bottom: 20px;
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #2a3b67;
-      border-radius: 12px;
-      padding: 10px 14px;
-      margin-bottom: 12px;
-      color: #cbd5e1;
-      font-size: 1rem;
-      user-select: text;
-    }
-
-    .cart-item-name {
-      flex-grow: 1;
-    }
-
-    .remove-item-btn {
-      background: transparent;
-      border: none;
-      color: #f87171;
-      font-weight: 700;
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 0 6px;
-      user-select: none;
-    }
-    .remove-item-btn:hover {
-      color: #ef4444;
-    }
-
-  </style>
+  }
+</style>
 </head>
 <body>
-  <main class="shop-container">
-    <div class="product-card">
-      <h2 class="product-title">1 Week Key</h2>
-      <p class="product-price">Price: $1</p>
-      <button class="purchase-button" onclick="handleProductButton(this, '1 Week Key', 1)">Purchase</button>
-    </div>
 
-    <div class="product-card">
-      <h2 class="product-title">1 Month Key</h2>
-      <p class="product-price">Price: $5</p>
-      <button class="purchase-button" onclick="handleProductButton(this, '1 Month Key', 5)">Purchase</button>
-    </div>
+<div id="cartLogo" tabindex="0" role="button" aria-label="Toggle Cart">Cart 🛒</div>
 
-    <div class="product-card">
-      <h2 class="product-title">1 Year Key</h2>
-      <p class="product-price">Price: $50</p>
-      <button class="purchase-button" onclick="handleProductButton(this, '1 Year Key', 50)">Purchase</button>
-    </div>
-  </main>
+<div id="cartModal" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+  <button id="cartCloseBtn" aria-label="Close Cart">&times;</button>
+  <h3 id="cartTitle" style="padding: 0 20px;">Your Cart</h3>
+  <div id="cartItems"><p>Your cart is empty.</p></div>
+</div>
 
-  <!-- Username Input Modal -->
-  <div id="usernameModal" class="modal-overlay">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="usernameModalTitle">
-      <button class="close-button" aria-label="Close" onclick="closeModal('usernameModal')">×</button>
-      <h3 id="usernameModalTitle">Enter Your Username</h3>
-      <p>Please enter your Discord or Roblox username to proceed.</p>
-      <input type="text" id="usernameInput" placeholder="Discord or Roblox username" />
-      <button class="submit-button" id="submitUsernameBtn" disabled>Submit</button>
-    </div>
+<div class="product-list">
+  <div class="product">
+    <h4>Item A</h4>
+    <p>$10</p>
+    <button class="purchase-button" data-name="Item A" data-price="10">Purchase</button>
   </div>
-
-  <!-- Cart Logo -->
-  <div id="cartLogo" title="Toggle Cart" aria-label="Toggle Cart" role="button" tabindex="0">
-    <!-- Shopping Cart SVG Icon -->
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10-2H8.42l-.72-3h9.72l-1.14 3zm-3-9h-6l-1 4h8l-1-4zm3.16 7l.74 3H7.99l.74-3H17.16zM21 6h-2l-3 9H8l-3-9H3V4h3.6l3.59 7.59L14.17 6H21v2z"/>
-    </svg>
+  <div class="product">
+    <h4>Item B</h4>
+    <p>$25</p>
+    <button class="purchase-button" data-name="Item B" data-price="25">Purchase</button>
   </div>
-
-  <!-- Cart Modal -->
-  <div id="cartModal" role="dialog" aria-modal="true" aria-labelledby="cartModalTitle" aria-describedby="cartModalDesc">
-    <h3 id="cartModalTitle">Your Cart
-      <button id="cartCloseBtn" aria-label="Close Cart">×</button>
-    </h3>
-    <div id="cartItems" aria-live="polite" aria-relevant="additions removals"></div>
-    <p id="cartModalDesc" style="color:#94a3b8; font-size:0.9rem; text-align:center;">
-      Add products by clicking "Add to Cart" buttons.
-    </p>
+  <div class="product">
+    <h4>Item C</h4>
+    <p>$50</p>
+    <button class="purchase-button" data-name="Item C" data-price="50">Purchase</button>
   </div>
+</div>
 
-  <script>
-    // State variables
-    let cartMode = false;
-    let cart = [];
+<!-- Username Verification Modal -->
+<div id="usernameModal" role="dialog" aria-modal="true" aria-labelledby="usernameTitle">
+  <div class="modal-content">
+    <h2 id="usernameTitle">Enter Your Username</h2>
+    <input type="text" id="usernameInput" placeholder="Discord or Roblox username" autocomplete="off" />
+    <button id="submitUsernameBtn" disabled>Submit</button>
+  </div>
+</div>
 
-    // Cache DOM elements
-    const cartLogo = document.getElementById('cartLogo');
-    const cartModal = document.getElementById('cartModal');
-    const cartCloseBtn = document.getElementById('cartCloseBtn');
-    const cartItemsContainer = document.getElementById('cartItems');
-    const purchaseButtons = document.querySelectorAll('.purchase-button');
+<!-- Notification -->
+<div id="notification">
+  <span class="notification-icon">✔️</span>
+  <span id="notification-text"></span>
+</div>
 
-    // Toggle cart mode when clicking the cart logo
-    cartLogo.addEventListener('click', () => {
-      cartMode = !cartMode;
-      updateButtons();
-      if (cartMode) {
-        openCart();
-      } else {
+<script>
+  let cartMode = false;
+  let cart = [];
+  let currentPurchase = null;
+
+  const cartLogo = document.getElementById('cartLogo');
+  const cartModal = document.getElementById('cartModal');
+  const cartCloseBtn = document.getElementById('cartCloseBtn');
+  const cartItemsContainer = document.getElementById('cartItems');
+  const purchaseButtons = document.querySelectorAll('.purchase-button');
+  const usernameModal = document.getElementById('usernameModal');
+  const usernameInput = document.getElementById('usernameInput');
+  const submitUsernameBtn = document.getElementById('submitUsernameBtn');
+  const notification = document.getElementById('notification');
+  const notificationText = document.getElementById('notification-text');
+
+  // Toggle cart modal
+  cartLogo.addEventListener('click', () => {
+    cartMode = !cartMode;
+    updateButtons();
+    if (cartMode) openCart();
+    else closeCart();
+  });
+
+  cartLogo.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      cartLogo.click();
+    }
+  });
+
+  cartCloseBtn.addEventListener('click', () => {
+    cartMode = false;
+    updateButtons();
+    closeCart();
+  });
+
+  // Update purchase buttons state
+  function updateButtons() {
+    const disable = cartMode || usernameModal.classList.contains('active');
+    purchaseButtons.forEach(btn => {
+      btn.disabled = disable;
+      btn.style.cursor = disable ? 'not-allowed' : 'pointer';
+      btn.style.opacity = disable ? '0.6' : '1';
+    });
+  }
+
+  function openCart() {
+    cartModal.classList.add('active');
+    renderCartItems();
+  }
+
+  function closeCart() {
+    cartModal.classList.remove('active');
+  }
+
+  function renderCartItems() {
+    if (cart.length === 0) {
+      cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+      return;
+    }
+    cartItemsContainer.innerHTML = '';
+    cart.forEach((item, index) => {
+      const p = document.createElement('p');
+      p.textContent = `${item.productName} - $${item.price}`;
+      cartItemsContainer.appendChild(p);
+    });
+  }
+
+  function openUsernameModal() {
+    usernameModal.classList.add('active');
+    usernameInput.value = '';
+    submitUsernameBtn.disabled = true;
+    usernameInput.focus();
+    updateButtons();
+  }
+
+  function closeUsernameModal() {
+    usernameModal.classList.remove('active');
+    currentPurchase = null;
+    updateButtons();
+  }
+
+  usernameInput.addEventListener('input', () => {
+    submitUsernameBtn.disabled = usernameInput.value.trim().length === 0;
+  });
+
+  submitUsernameBtn.addEventListener('click', () => {
+    const username = usernameInput.value.trim();
+    if (!username) return;
+
+    // Simulate purchase completion and verification
+    addToCart(currentPurchase);
+    closeUsernameModal();
+    showNotification(`${currentPurchase.productName} was added to your cart! (User: ${username})`);
+  });
+
+  // Add product to cart
+  function addToCart(product) {
+    cart.push(product);
+    renderCartItems();
+  }
+
+  // Purchase buttons handler
+  purchaseButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (cartMode || usernameModal.classList.contains('active')) return;
+      const productName = btn.getAttribute('data-name');
+      const price = btn.getAttribute('data-price');
+      currentPurchase = { productName, price };
+      openUsernameModal();
+    });
+  });
+
+  // Notification
+  function showNotification(message) {
+    notificationText.textContent = message;
+    notification.style.display = 'flex';
+
+    clearTimeout(notification.hideTimeout);
+    notification.hideTimeout = setTimeout(() => {
+      notification.style.display = 'none';
+    }, 3000);
+  }
+
+  // Close modals on ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (usernameModal.classList.contains('active')) closeUsernameModal();
+      if (cartModal.classList.contains('active')) {
+        cartMode = false;
+        updateButtons();
         closeCart();
       }
-    });
-
-    // Allow keyboard toggle for accessibility
-    cartLogo.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        cartLogo.click();
-      }
-    });
-
-    // Close cart modal when clicking close button
-    cartCloseBtn.addEventListener('click', () => {
-      cartMode = false;
-      updateButtons();
-      closeCart();
-    });
-
-    // Update all buttons based on cart mode
-    function updateButtons() {
-      purchaseButtons.forEach(btn => {
-        if (cartMode) {
-          btn.textContent = 'Add to Cart';
-          btn.title = 'Add this product to your cart';
-        } else {
-          btn.textContent = 'Purchase';
-          btn.title = 'Purchase this product now';
-        }
-      });
     }
-
-    // Open the cart modal and render contents
-    function openCart() {
-      renderCartItems();
-      cartModal.classList.add('active');
-    }
-
-    // Close the cart modal
-    function closeCart() {
-      cartModal.classList.remove('active');
-    }
-
-    // Render cart items inside the cart modal
-    function renderCartItems() {
-      cartItemsContainer.innerHTML = '';
-
-      if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '<p style="text-align:center; color:#94a3b8;">Your cart is empty.</p>';
-        return;
-      }
-
-      cart.forEach((item, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.classList.add('cart-item');
-
-        const nameSpan = document.createElement('span');
-        nameSpan.classList.add('cart-item-name');
-        nameSpan.textContent = `${item.name} - $${item.price}`;
-
-        const removeBtn = document.createElement('button');
-        removeBtn.classList.add('remove-item-btn');
-        removeBtn.setAttribute('aria-label', `Remove ${item.name} from cart`);
-        removeBtn.textContent = '×';
-
-        removeBtn.addEventListener('click', () => {
-          removeFromCart(index);
-        });
-
-        itemDiv.appendChild(nameSpan);
-        itemDiv.appendChild(removeBtn);
-        cartItemsContainer.appendChild(itemDiv);
-      });
-    }
-
-    // Remove item from cart by index and re-render
-    function removeFromCart(index) {
-      cart.splice(index, 1);
-      renderCartItems();
-    }
-
-    // Handle product button clicks
-    function handleProductButton(button, productName, productPrice) {
-      if (cartMode) {
-        // Add to cart
-        cart.push({ name: productName, price: productPrice });
-        alert(`Added "${productName}" to your cart.`);
-        renderCartItems();
-      } else {
-        // Purchase flow: open username modal
-        openUsernameModal(productName);
-      }
-    }
-
-    // Username modal references
-    const usernameModal = document.getElementById('usernameModal');
-    const usernameInput = document.getElementById('usernameInput');
-    const submitUsernameBtn = document.getElementById('submitUsernameBtn');
-    let currentProductName = '';
-
-    // Open username modal with product info
-    function openUsernameModal(productName) {
-      currentProductName = productName;
-      usernameInput.value = '';
-      submitUsernameBtn.disabled = true;
-      usernameModal.classList.add('active');
-      usernameInput.focus();
-    }
-
-    // Close username modal
-    function closeModal(modalId) {
-      const modal = document.getElementById(modalId);
-      modal.classList.remove('active');
-    }
-
-    // Enable submit button if input is not empty
-    usernameInput.addEventListener('input', () => {
-      submitUsernameBtn.disabled = usernameInput.value.trim() === '';
-    });
-
-    // Handle username submit
-    submitUsernameBtn.addEventListener('click', () => {
-      const username = usernameInput.value.trim();
-      if (!username) return;
-
-      alert(`Thank you, ${username}! You purchased "${currentProductName}".`);
-
-      // Here you can add actual purchase processing logic
-
-      closeModal('usernameModal');
-    });
-
-    // Close username modal on outside click or ESC
-    usernameModal.addEventListener('click', (e) => {
-      if (e.target === usernameModal) {
-        closeModal('usernameModal');
-      }
-    });
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeModal('usernameModal');
-      }
-    });
-  </script>
+  });
+</script>
 </body>
 </html>
