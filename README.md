@@ -30,7 +30,7 @@
       border-radius: 30px;
       box-shadow: 0 20px 80px rgba(0,0,0,0.6), 0 0 40px rgba(0,123,255,0.3);
       padding: 60px;
-      width: 600px;
+      width: 750px;
       max-width: 95vw;
       transition: all 0.3s ease-in-out;
     }
@@ -61,13 +61,14 @@
       font-size: 1.75rem;
       color: #ffffff;
       cursor: pointer;
-      transition: all 0.2s ease-in-out;
+      transition: all 0.3s ease-in-out;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     }
 
     button:hover {
       background: linear-gradient(145deg, #255980, #0e2a3c);
       transform: translateY(-4px);
+      box-shadow: 0 0 12px #00aaff, 0 0 24px #007BFF;
     }
 
     button.operator {
@@ -76,6 +77,7 @@
 
     button.operator:hover {
       background: #0065cc;
+      box-shadow: 0 0 12px #00aaff, 0 0 24px #007BFF;
     }
 
     button.equals {
@@ -85,6 +87,7 @@
 
     button.equals:hover {
       background-color: #159c87;
+      box-shadow: 0 0 12px #1abc9c, 0 0 24px #1abc9c;
     }
 
     button.clear {
@@ -93,6 +96,7 @@
 
     button.clear:hover {
       background-color: #c0392b;
+      box-shadow: 0 0 12px #ff6b6b, 0 0 24px #e74c3c;
     }
   </style>
 </head>
