@@ -71,14 +71,28 @@
       box-shadow: 0 0 12px #00aaff, 0 0 24px #007BFF;
     }
 
-    button.operator,
-    button.equals,
+    button.operator {
+      background: linear-gradient(145deg, #007BFF, #0056b3);
+    }
+
+    button.operator:hover {
+      background: linear-gradient(145deg, #009dff, #0056b3);
+      transform: translateY(-4px);
+      box-shadow: 0 0 12px #00aaff, 0 0 24px #007BFF;
+    }
+
+    button.equals {
+      background: linear-gradient(145deg, #007BFF, #0056b3);
+    }
+
+    button.equals:hover {
+      background: linear-gradient(145deg, #009dff, #0056b3);
+    }
+
     button.clear {
       background: linear-gradient(145deg, #1c3d5a, #12283a);
     }
 
-    button.operator:hover,
-    button.equals:hover,
     button.clear:hover {
       background: linear-gradient(145deg, #255980, #0e2a3c);
       transform: translateY(-4px);
