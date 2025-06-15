@@ -28,9 +28,9 @@
       backdrop-filter: blur(20px);
       border: 2px solid rgba(255, 255, 255, 0.1);
       border-radius: 30px;
-      box-shadow: 0 20px 80px rgba(0,0,0,0.6), 0 0 40px rgba(0,123,255,0.3);
-      padding: 60px;
-      width: 750px;
+      box-shadow: 0 10px 50px rgba(0,0,0,0.4), 0 0 20px rgba(0,123,255,0.2);
+      padding: 50px;
+      width: 550px;
       max-width: 95vw;
       transition: all 0.3s ease-in-out;
     }
@@ -38,31 +38,31 @@
     .display {
       background-color: rgba(255, 255, 255, 0.1);
       border-radius: 16px;
-      padding: 40px;
-      font-size: 3rem;
+      padding: 30px;
+      font-size: 2.5rem;
       color: #ffffff;
       text-align: right;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
       word-wrap: break-word;
-      min-height: 80px;
+      min-height: 70px;
     }
 
     .buttons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 25px;
+      gap: 20px;
     }
 
     button {
       background: linear-gradient(145deg, #1c3d5a, #12283a);
       border: none;
-      border-radius: 20px;
-      padding: 30px;
-      font-size: 1.75rem;
+      border-radius: 16px;
+      padding: 24px;
+      font-size: 1.5rem;
       color: #ffffff;
       cursor: pointer;
       transition: all 0.3s ease-in-out;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
     }
 
     button:hover {
@@ -71,32 +71,21 @@
       box-shadow: 0 0 12px #00aaff, 0 0 24px #007BFF;
     }
 
-    button.operator {
-      background: #007BFF;
+    button.operator,
+    button.equals,
+    button.clear {
+      background: linear-gradient(145deg, #1c3d5a, #12283a);
     }
 
-    button.operator:hover {
-      background: #0065cc;
+    button.operator:hover,
+    button.equals:hover,
+    button.clear:hover {
+      background: linear-gradient(145deg, #255980, #0e2a3c);
       box-shadow: 0 0 12px #00aaff, 0 0 24px #007BFF;
     }
 
     button.equals {
-      background-color: #1abc9c;
       grid-column: span 2;
-    }
-
-    button.equals:hover {
-      background-color: #159c87;
-      box-shadow: 0 0 12px #1abc9c, 0 0 24px #1abc9c;
-    }
-
-    button.clear {
-      background-color: #e74c3c;
-    }
-
-    button.clear:hover {
-      background-color: #c0392b;
-      box-shadow: 0 0 12px #ff6b6b, 0 0 24px #e74c3c;
     }
   </style>
 </head>
