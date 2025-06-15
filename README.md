@@ -14,67 +14,84 @@
       margin: 0;
       padding: 0;
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      color: white;
     }
 
     .calculator {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(15px);
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      padding: 30px;
-      width: 320px;
+      background: rgba(0, 34, 85, 0.4);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      box-shadow: 0 15px 45px rgba(0,0,0,0.4);
+      padding: 40px;
+      width: 400px;
+      max-width: 90vw;
+      transition: all 0.3s ease-in-out;
     }
 
     .display {
-      background-color: rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      padding: 20px;
-      font-size: 2rem;
-      color: #fff;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 30px;
+      font-size: 2.5rem;
+      color: #ffffff;
       text-align: right;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
       word-wrap: break-word;
-      min-height: 50px;
+      min-height: 60px;
     }
 
     .buttons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
+      gap: 20px;
     }
 
     button {
-      background: rgba(255, 255, 255, 0.15);
+      background: linear-gradient(145deg, #1c3d5a, #12283a);
       border: none;
-      border-radius: 12px;
-      padding: 20px;
-      font-size: 1.2rem;
-      color: #fff;
+      border-radius: 16px;
+      padding: 25px;
+      font-size: 1.5rem;
+      color: #ffffff;
       cursor: pointer;
       transition: all 0.2s ease-in-out;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
 
     button:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: scale(1.05);
+      background: linear-gradient(145deg, #255980, #0e2a3c);
+      transform: translateY(-3px);
     }
 
     button.operator {
-      background-color: #ff6f61;
+      background: #007BFF;
+    }
+
+    button.operator:hover {
+      background: #0065cc;
     }
 
     button.equals {
-      background-color: #28c76f;
+      background-color: #1abc9c;
       grid-column: span 2;
     }
 
+    button.equals:hover {
+      background-color: #159c87;
+    }
+
     button.clear {
-      background-color: #ff3f34;
+      background-color: #e74c3c;
+    }
+
+    button.clear:hover {
+      background-color: #c0392b;
     }
   </style>
 </head>
@@ -108,7 +125,7 @@
     const display = document.getElementById('display');
 
     function appendValue(val) {
-      if (display.innerText === '0') display.innerText = '';
+      if (display.innerText === '0' || display.innerText === 'Error') display.innerText = '';
       display.innerText += val;
     }
 
