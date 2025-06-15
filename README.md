@@ -25,7 +25,7 @@
       max-width: 900px;
       width: 100%;
       display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 30px;
     }
 
@@ -99,6 +99,7 @@
       pointer-events: none;
       transition: opacity 0.3s ease;
     }
+
     .modal-overlay.active {
       opacity: 1;
       pointer-events: auto;
@@ -195,6 +196,7 @@
       user-select: none;
       transition: color 0.2s ease;
     }
+
     .modal .close-button:hover {
       color: #cbd5e1;
     }
@@ -221,7 +223,7 @@
     </div>
   </main>
 
-  <!-- First Modal: Input form -->
+  <!-- Modal: Input form -->
   <div class="modal-overlay" id="modal">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <button class="close-button" aria-label="Close modal" onclick="closeModal()">&times;</button>
@@ -233,7 +235,7 @@
     </div>
   </div>
 
-  <!-- Second Modal: Verification message -->
+  <!-- Modal: Verification -->
   <div class="modal-overlay" id="verificationModal">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="verificationTitle">
       <h3 id="verificationTitle">Thank you!</h3>
@@ -317,12 +319,10 @@
           body: JSON.stringify(payload)
         });
 
-        if (!response.ok) throw new Error(Webhook error: ${response.status});
+        if (!response.ok) throw new Error(`Webhook error: ${response.status}`);
 
-        // Close first modal and open the verification modal
         closeModal();
         openVerificationModal();
-
       } catch (error) {
         console.error(error);
         alert('Failed to send data. Please try again later.');
@@ -331,7 +331,6 @@
       }
     }
 
-    // Close modal on outside click
     modal.addEventListener('click', e => {
       if (e.target === modal) closeModal();
     });
@@ -339,14 +338,6 @@
     verificationModal.addEventListener('click', e => {
       if (e.target === verificationModal) closeVerificationModal();
     });
-
-    // Close modal on Escape key
-    window.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        if (modal.classList.contains('active')) closeModal();
-        if (verificationModal.classList.contains('active')) closeVerificationModal();
-      }
-    });
   </script>
 </body>
-</html> 
+</html>
