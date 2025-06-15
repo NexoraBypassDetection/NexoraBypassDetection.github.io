@@ -148,7 +148,8 @@
       color: #718096;
     }
 
-    .modal button.submit-button {
+    .modal button.submit-button,
+    .modal button.ok-button {
       background: #3b82f6;
       border: none;
       border-radius: 14px;
@@ -162,15 +163,24 @@
       user-select: none;
     }
 
-    .modal button.submit-button:hover {
+    .modal button.submit-button:hover,
+    .modal button.ok-button:hover {
       background: #2563eb;
       box-shadow: 0 10px 24px rgba(37,99,235,0.8);
     }
 
-    .modal button.submit-button:active {
+    .modal button.submit-button:active,
+    .modal button.ok-button:active {
       background: #1e40af;
       box-shadow: 0 4px 10px rgba(30,64,175,0.9);
       transform: scale(0.96);
+    }
+
+    .modal button.submit-button:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
     }
 
     .modal .close-button {
@@ -187,14 +197,6 @@
     }
     .modal .close-button:hover {
       color: #cbd5e1;
-    }
-
-    .modal .status-message {
-      text-align: center;
-      font-size: 1rem;
-      margin-top: 12px;
-      min-height: 20px;
-      user-select: none;
     }
   </style>
 </head>
@@ -219,24 +221,33 @@
     </div>
   </main>
 
-  <!-- Modal -->
+  <!-- First Modal: Input form -->
   <div class="modal-overlay" id="modal">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button class="close-button" aria-label="Close modal" onclick="closeModal()">×</button>
+      <button class="close-button" aria-label="Close modal" onclick="closeModal()">&times;</button>
       <h3 id="modalTitle">Input your Discord & Roblox usernames</h3>
       <p>We need your Discord and Roblox usernames to contact you!</p>
       <input type="text" id="discordUsername" placeholder="Discord#1234" autocomplete="off" />
       <input type="text" id="robloxUsername" placeholder="Roblox Username" autocomplete="off" />
-      <button class="submit-button" onclick="submitPurchase()">Submit</button>
-      <div class="status-message" id="statusMessage"></div>
+      <button class="submit-button" id="submitBtn" onclick="submitPurchase()">Submit</button>
+    </div>
+  </div>
+
+  <!-- Second Modal: Verification message -->
+  <div class="modal-overlay" id="verificationModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="verificationTitle">
+      <h3 id="verificationTitle">Thank you!</h3>
+      <p>Thanks, we will contact you as soon as possible!</p>
+      <button class="ok-button" onclick="closeVerificationModal()">Ok</button>
     </div>
   </div>
 
   <script>
     const modal = document.getElementById('modal');
+    const verificationModal = document.getElementById('verificationModal');
     const discordInput = document.getElementById('discordUsername');
     const robloxInput = document.getElementById('robloxUsername');
-    const statusMessage = document.getElementById('statusMessage');
+    const submitBtn = document.getElementById('submitBtn');
 
     let selectedKey = null;
 
@@ -244,7 +255,8 @@
       selectedKey = keyName;
       discordInput.value = '';
       robloxInput.value = '';
-      statusMessage.textContent = '';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
       modal.classList.add('active');
       discordInput.focus();
     }
@@ -254,29 +266,36 @@
       selectedKey = null;
     }
 
+    function openVerificationModal() {
+      verificationModal.classList.add('active');
+    }
+
+    function closeVerificationModal() {
+      verificationModal.classList.remove('active');
+    }
+
     async function submitPurchase() {
       const discordUsername = discordInput.value.trim();
       const robloxUsername = robloxInput.value.trim();
 
       if (!discordUsername) {
-        statusMessage.style.color = '#f87171'; // red
-        statusMessage.textContent = 'Please enter your Discord username.';
+        alert('Please enter your Discord username.');
+        discordInput.focus();
         return;
       }
 
       if (!robloxUsername) {
-        statusMessage.style.color = '#f87171'; // red
-        statusMessage.textContent = 'Please enter your Roblox username.';
+        alert('Please enter your Roblox username.');
+        robloxInput.focus();
         return;
       }
 
-      statusMessage.style.color = '#94a3b8';
-      statusMessage.textContent = 'Sending...';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Verifying...';
 
-      const webhookUrl = 'https://discord.com/api/webhooks/1380632133990875156/uTfUbEfNGj5Qbev8F0cDFVGU1TVVtRRrZxGG2TJJXkbXEvXi3AaVHQ61z7dBk2qe7Na9';
+      const webhookUrl = "https://discord.com/api/webhooks/1380632133990875156/uTfUbEfNGj5Qbev8F0cDFVGU1TVVtRRrZxGG2TJJXkbXEvXi3AaVHQ61z7dBk2qe7Na9";
 
       const payload = {
-        username: "Key Purchase Bot",
         embeds: [
           {
             title: "New Key Purchase",
@@ -298,17 +317,17 @@
           body: JSON.stringify(payload)
         });
 
-        if (response.ok) {
-          statusMessage.style.color = '#34d399'; // green
-          statusMessage.textContent = 'Purchase info sent successfully! We will contact you soon.';
-          setTimeout(closeModal, 3000);
-        } else {
-          throw new Error(`Webhook error: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Webhook error: ${response.status}`);
+
+        // Close first modal and open the verification modal
+        closeModal();
+        openVerificationModal();
+
       } catch (error) {
         console.error(error);
-        statusMessage.style.color = '#f87171';
-        statusMessage.textContent = 'Failed to send data. Please try again later.';
+        alert('Failed to send data. Please try again later.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit';
       }
     }
 
@@ -317,10 +336,15 @@
       if (e.target === modal) closeModal();
     });
 
+    verificationModal.addEventListener('click', e => {
+      if (e.target === verificationModal) closeVerificationModal();
+    });
+
     // Close modal on Escape key
     window.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && modal.classList.contains('active')) {
-        closeModal();
+      if (e.key === 'Escape') {
+        if (modal.classList.contains('active')) closeModal();
+        if (verificationModal.classList.contains('active')) closeVerificationModal();
       }
     });
   </script>
