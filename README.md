@@ -19,10 +19,11 @@
       align-items: flex-start;
       min-height: 100vh;
       padding: 40px 20px;
+      position: relative;
     }
 
     .shop-container {
-      max-width: 700px;
+      max-width: 900px;
       width: 100%;
       display: grid;
       grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
@@ -61,11 +62,11 @@
       color: #94a3b8;
     }
 
-    .purchase-button, .add-cart-button {
+    .purchase-button {
       background: #3b82f6;
       border: none;
       border-radius: 14px;
-      padding: 12px 0;
+      padding: 16px 0;
       color: white;
       font-weight: 700;
       font-size: 1.1rem;
@@ -73,97 +74,17 @@
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
       box-shadow: 0 6px 12px rgba(59,130,246,0.5);
       user-select: none;
-      margin-top: auto;
     }
 
-    .purchase-button:hover, .add-cart-button:hover {
+    .purchase-button:hover {
       background: #2563eb;
       box-shadow: 0 10px 24px rgba(37,99,235,0.7);
     }
 
-    .purchase-button:active, .add-cart-button:active {
+    .purchase-button:active {
       background: #1e40af;
       box-shadow: 0 4px 10px rgba(30,64,175,0.8);
       transform: scale(0.96);
-    }
-
-    /* Cart sidebar */
-    .cart-sidebar {
-      position: fixed;
-      top: 40px;
-      right: 20px;
-      width: 320px;
-      max-height: 80vh;
-      background: #1e2a47;
-      border-radius: 16px;
-      box-shadow: 0 12px 30px rgba(20,40,80,0.9);
-      padding: 20px 24px;
-      color: #cbd5e1;
-      display: flex;
-      flex-direction: column;
-      user-select: none;
-      z-index: 1100;
-    }
-
-    .cart-sidebar h3 {
-      margin-top: 0;
-      font-weight: 700;
-      font-size: 1.5rem;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-
-    .cart-list {
-      flex-grow: 1;
-      overflow-y: auto;
-      margin-bottom: 16px;
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid #2a3b67;
-      font-size: 1.1rem;
-      color: #94a3b8;
-    }
-
-    .cart-item:last-child {
-      border-bottom: none;
-    }
-
-    .cart-total {
-      font-weight: 700;
-      font-size: 1.3rem;
-      margin-bottom: 16px;
-      text-align: right;
-      color: #3b82f6;
-    }
-
-    .checkout-button {
-      background: #22c55e;
-      border: none;
-      border-radius: 14px;
-      padding: 14px 0;
-      color: white;
-      font-weight: 700;
-      font-size: 1.2rem;
-      cursor: pointer;
-      box-shadow: 0 6px 12px rgba(34,197,94,0.7);
-      user-select: none;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .checkout-button:hover {
-      background: #16a34a;
-      box-shadow: 0 10px 24px rgba(22,163,74,0.8);
-    }
-
-    .checkout-button:disabled {
-      background: #94a3b8;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
     }
 
     /* Modal styles */
@@ -194,6 +115,8 @@
       flex-direction: column;
       user-select: none;
       position: relative;
+      max-height: 80vh;
+      overflow-y: auto;
     }
 
     .modal h3 {
@@ -265,301 +188,349 @@
 
     .modal .close-button {
       position: absolute;
-      top: 12px;
+      top: 14px;
       right: 14px;
       background: transparent;
       border: none;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       color: #94a3b8;
       cursor: pointer;
       user-select: none;
-      transition: color 0.3s ease;
+      transition: color 0.2s ease;
     }
     .modal .close-button:hover {
       color: #cbd5e1;
     }
 
-    /* Scrollbar for cart */
-    .cart-list::-webkit-scrollbar {
-      width: 6px;
-    }
-    .cart-list::-webkit-scrollbar-thumb {
+    /* Cart logo fixed on side */
+    #cartLogo {
+      position: fixed;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
       background: #3b82f6;
-      border-radius: 10px;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(59,130,246,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      z-index: 1100;
+      transition: background-color 0.3s ease;
     }
+    #cartLogo:hover {
+      background: #2563eb;
+      box-shadow: 0 6px 14px rgba(37,99,235,0.8);
+    }
+    #cartLogo svg {
+      fill: white;
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Cart modal styles */
+    #cartModal {
+      position: fixed;
+      top: 50%;
+      right: 70px;
+      transform: translateY(-50%);
+      background: #1e2a47;
+      border-radius: 16px;
+      width: 320px;
+      max-height: 80vh;
+      box-shadow: 0 12px 30px rgba(20,40,80,0.9);
+      z-index: 1050;
+      display: none;
+      flex-direction: column;
+      padding: 20px 24px;
+      overflow-y: auto;
+      user-select: none;
+    }
+
+    #cartModal.active {
+      display: flex;
+    }
+
+    #cartModal h3 {
+      margin: 0 0 16px 0;
+      color: #cbd5e1;
+      font-weight: 700;
+      font-size: 1.4rem;
+      text-align: center;
+      position: relative;
+    }
+
+    #cartCloseBtn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: #94a3b8;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s ease;
+    }
+    #cartCloseBtn:hover {
+      color: #cbd5e1;
+    }
+
+    #cartItems {
+      flex-grow: 1;
+      overflow-y: auto;
+      margin-bottom: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #2a3b67;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      color: #cbd5e1;
+      font-size: 1rem;
+      user-select: text;
+    }
+
+    .cart-item-name {
+      flex-grow: 1;
+    }
+
+    .remove-item-btn {
+      background: transparent;
+      border: none;
+      color: #f87171;
+      font-weight: 700;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0 6px;
+      user-select: none;
+    }
+    .remove-item-btn:hover {
+      color: #ef4444;
+    }
+
   </style>
 </head>
 <body>
-  <main class="shop-container" id="shopContainer">
-    <div class="product-card" data-key="discord_key_1" data-price="15">
-      <h2 class="product-title">Discord Nitro Key</h2>
-      <p class="product-price">$15</p>
-      <button class="add-cart-button">Add to Cart</button>
+  <main class="shop-container">
+    <div class="product-card">
+      <h2 class="product-title">1 Week Key</h2>
+      <p class="product-price">Price: $1</p>
+      <button class="purchase-button" onclick="handleProductButton(this, '1 Week Key', 1)">Purchase</button>
     </div>
-    <div class="product-card" data-key="roblox_key_1" data-price="10">
-      <h2 class="product-title">Roblox Premium Key</h2>
-      <p class="product-price">$10</p>
-      <button class="add-cart-button">Add to Cart</button>
+
+    <div class="product-card">
+      <h2 class="product-title">1 Month Key</h2>
+      <p class="product-price">Price: $5</p>
+      <button class="purchase-button" onclick="handleProductButton(this, '1 Month Key', 5)">Purchase</button>
     </div>
-    <div class="product-card" data-key="steam_key_1" data-price="20">
-      <h2 class="product-title">Steam Gift Card</h2>
-      <p class="product-price">$20</p>
-      <button class="add-cart-button">Add to Cart</button>
+
+    <div class="product-card">
+      <h2 class="product-title">1 Year Key</h2>
+      <p class="product-price">Price: $50</p>
+      <button class="purchase-button" onclick="handleProductButton(this, '1 Year Key', 50)">Purchase</button>
     </div>
   </main>
 
-  <!-- Cart Sidebar -->
-  <aside class="cart-sidebar" id="cartSidebar" aria-label="Shopping Cart">
-    <h3>Your Cart</h3>
-    <div class="cart-list" id="cartList">
-      <p style="color:#718096;text-align:center;">Your cart is empty.</p>
-    </div>
-    <div class="cart-total" id="cartTotal">$0</div>
-    <button id="checkoutButton" class="checkout-button" disabled>Checkout</button>
-  </aside>
-
-  <!-- Modal Overlay & Content -->
-  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
-    <div class="modal" role="document">
-      <button class="close-button" id="modalClose" aria-label="Close">&times;</button>
-      <h3 id="modalTitle">Enter Your Details</h3>
-      <p id="modalDesc">Please enter your Discord and Roblox usernames below.</p>
-      <input type="text" id="discordInput" placeholder="Discord username (e.g. User#1234)" autocomplete="off" />
-      <input type="text" id="robloxInput" placeholder="Roblox username" autocomplete="off" />
-      <button class="submit-button" id="submitPurchase">Submit Purchase</button>
+  <!-- Username Input Modal -->
+  <div id="usernameModal" class="modal-overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="usernameModalTitle">
+      <button class="close-button" aria-label="Close" onclick="closeModal('usernameModal')">×</button>
+      <h3 id="usernameModalTitle">Enter Your Username</h3>
+      <p>Please enter your Discord or Roblox username to proceed.</p>
+      <input type="text" id="usernameInput" placeholder="Discord or Roblox username" />
+      <button class="submit-button" id="submitUsernameBtn" disabled>Submit</button>
     </div>
   </div>
 
-  <!-- Success Modal -->
-  <div class="modal-overlay" id="successOverlay" role="alertdialog" aria-modal="true" aria-labelledby="successTitle">
-    <div class="modal" role="document">
-      <button class="close-button" id="successClose" aria-label="Close">&times;</button>
-      <h3 id="successTitle">Purchase Successful!</h3>
-      <p>Thank you for your purchase. Your keys will be delivered soon.</p>
-      <button class="ok-button" id="successOk">OK</button>
-    </div>
+  <!-- Cart Logo -->
+  <div id="cartLogo" title="Toggle Cart" aria-label="Toggle Cart" role="button" tabindex="0">
+    <!-- Shopping Cart SVG Icon -->
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10-2H8.42l-.72-3h9.72l-1.14 3zm-3-9h-6l-1 4h8l-1-4zm3.16 7l.74 3H7.99l.74-3H17.16zM21 6h-2l-3 9H8l-3-9H3V4h3.6l3.59 7.59L14.17 6H21v2z"/>
+    </svg>
+  </div>
+
+  <!-- Cart Modal -->
+  <div id="cartModal" role="dialog" aria-modal="true" aria-labelledby="cartModalTitle" aria-describedby="cartModalDesc">
+    <h3 id="cartModalTitle">Your Cart
+      <button id="cartCloseBtn" aria-label="Close Cart">×</button>
+    </h3>
+    <div id="cartItems" aria-live="polite" aria-relevant="additions removals"></div>
+    <p id="cartModalDesc" style="color:#94a3b8; font-size:0.9rem; text-align:center;">
+      Add products by clicking "Add to Cart" buttons.
+    </p>
   </div>
 
   <script>
-    (() => {
-      // DOM Elements
-      const addCartButtons = document.querySelectorAll('.add-cart-button');
-      const cartList = document.getElementById('cartList');
-      const cartTotal = document.getElementById('cartTotal');
-      const checkoutButton = document.getElementById('checkoutButton');
-      const modalOverlay = document.getElementById('modalOverlay');
-      const modalClose = document.getElementById('modalClose');
-      const discordInput = document.getElementById('discordInput');
-      const robloxInput = document.getElementById('robloxInput');
-      const submitPurchase = document.getElementById('submitPurchase');
-      const successOverlay = document.getElementById('successOverlay');
-      const successClose = document.getElementById('successClose');
-      const successOk = document.getElementById('successOk');
+    // State variables
+    let cartMode = false;
+    let cart = [];
 
-      // Webhook URL (replace with your actual webhook)
-      const webhookURL = 'https://discord.com/api/webhooks/yourwebhookurl';
+    // Cache DOM elements
+    const cartLogo = document.getElementById('cartLogo');
+    const cartModal = document.getElementById('cartModal');
+    const cartCloseBtn = document.getElementById('cartCloseBtn');
+    const cartItemsContainer = document.getElementById('cartItems');
+    const purchaseButtons = document.querySelectorAll('.purchase-button');
 
-      // Cart data: Array of objects { key, title, price, quantity }
-      let cart = [];
+    // Toggle cart mode when clicking the cart logo
+    cartLogo.addEventListener('click', () => {
+      cartMode = !cartMode;
+      updateButtons();
+      if (cartMode) {
+        openCart();
+      } else {
+        closeCart();
+      }
+    });
 
-      // Format price display helper
-      function formatPrice(value) {
-        return `$${value.toFixed(2)}`;
+    // Allow keyboard toggle for accessibility
+    cartLogo.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        cartLogo.click();
+      }
+    });
+
+    // Close cart modal when clicking close button
+    cartCloseBtn.addEventListener('click', () => {
+      cartMode = false;
+      updateButtons();
+      closeCart();
+    });
+
+    // Update all buttons based on cart mode
+    function updateButtons() {
+      purchaseButtons.forEach(btn => {
+        if (cartMode) {
+          btn.textContent = 'Add to Cart';
+          btn.title = 'Add this product to your cart';
+        } else {
+          btn.textContent = 'Purchase';
+          btn.title = 'Purchase this product now';
+        }
+      });
+    }
+
+    // Open the cart modal and render contents
+    function openCart() {
+      renderCartItems();
+      cartModal.classList.add('active');
+    }
+
+    // Close the cart modal
+    function closeCart() {
+      cartModal.classList.remove('active');
+    }
+
+    // Render cart items inside the cart modal
+    function renderCartItems() {
+      cartItemsContainer.innerHTML = '';
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p style="text-align:center; color:#94a3b8;">Your cart is empty.</p>';
+        return;
       }
 
-      // Update Cart UI
-      function updateCartUI() {
-        if (cart.length === 0) {
-          cartList.innerHTML = `<p style="color:#718096;text-align:center;">Your cart is empty.</p>`;
-          cartTotal.textContent = formatPrice(0);
-          checkoutButton.disabled = true;
-          return;
-        }
+      cart.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('cart-item');
 
-        let total = 0;
-        cartList.innerHTML = '';
+        const nameSpan = document.createElement('span');
+        nameSpan.classList.add('cart-item-name');
+        nameSpan.textContent = `${item.name} - $${item.price}`;
 
-        cart.forEach(item => {
-          const itemTotal = item.price * item.quantity;
-          total += itemTotal;
+        const removeBtn = document.createElement('button');
+        removeBtn.classList.add('remove-item-btn');
+        removeBtn.setAttribute('aria-label', `Remove ${item.name} from cart`);
+        removeBtn.textContent = '×';
 
-          const itemElem = document.createElement('div');
-          itemElem.classList.add('cart-item');
-          itemElem.innerHTML = `
-            <span>${item.title} x${item.quantity}</span>
-            <span>${formatPrice(itemTotal)}</span>
-          `;
-
-          cartList.appendChild(itemElem);
+        removeBtn.addEventListener('click', () => {
+          removeFromCart(index);
         });
 
-        cartTotal.textContent = formatPrice(total);
-        checkoutButton.disabled = false;
-      }
-
-      // Add item to cart
-      function addToCart(key, title, price) {
-        const existingItem = cart.find(item => item.key === key);
-        if (existingItem) {
-          existingItem.quantity++;
-        } else {
-          cart.push({ key, title, price, quantity: 1 });
-        }
-        updateCartUI();
-      }
-
-      // Open modal for user details input
-      function openModal() {
-        modalOverlay.classList.add('active');
-        discordInput.value = '';
-        robloxInput.value = '';
-        submitPurchase.disabled = false;
-        discordInput.focus();
-      }
-
-      // Close modal
-      function closeModal() {
-        modalOverlay.classList.remove('active');
-      }
-
-      // Open success modal
-      function openSuccessModal() {
-        successOverlay.classList.add('active');
-      }
-
-      // Close success modal
-      function closeSuccessModal() {
-        successOverlay.classList.remove('active');
-      }
-
-      // Validate Discord username format: username#1234
-      function isValidDiscordUsername(username) {
-        return /^.{2,32}#[0-9]{4}$/.test(username);
-      }
-
-      // Validate Roblox username format (simple check)
-      function isValidRobloxUsername(username) {
-        return /^[a-zA-Z0-9_]{3,20}$/.test(username);
-      }
-
-      // Send purchase info to Discord webhook
-      async function sendWebhook(payload) {
-        try {
-          const response = await fetch(webhookURL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-          });
-          return response.ok;
-        } catch (error) {
-          console.error('Webhook send error:', error);
-          return false;
-        }
-      }
-
-      // Handle purchase submission
-      submitPurchase.addEventListener('click', async () => {
-        const discordUsername = discordInput.value.trim();
-        const robloxUsername = robloxInput.value.trim();
-
-        if (!isValidDiscordUsername(discordUsername)) {
-          alert('Discord username must be in the format username#1234');
-          discordInput.focus();
-          return;
-        }
-        if (!isValidRobloxUsername(robloxUsername)) {
-          alert('Roblox username is invalid. Use 3-20 characters, letters, numbers, or underscores only.');
-          robloxInput.focus();
-          return;
-        }
-        if (cart.length === 0) {
-          alert('Your cart is empty.');
-          return;
-        }
-
-        submitPurchase.disabled = true;
-
-        // Build description for Discord embed from cart items
-        const cartDescription = cart.map(item => `**${item.title}** x${item.quantity} — $${(item.price * item.quantity).toFixed(2)}`).join('\n');
-
-        const payload = {
-          username: 'Key Shop Bot',
-          embeds: [
-            {
-              title: 'New Purchase',
-              color: 0x3b82f6,
-              fields: [
-                {
-                  name: 'Discord Username',
-                  value: discordUsername,
-                  inline: true,
-                },
-                {
-                  name: 'Roblox Username',
-                  value: robloxUsername,
-                  inline: true,
-                },
-                {
-                  name: 'Items Purchased',
-                  value: cartDescription,
-                },
-                {
-                  name: 'Total Price',
-                  value: `$${cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)}`,
-                },
-              ],
-              timestamp: new Date().toISOString(),
-            },
-          ],
-        };
-
-        const success = await sendWebhook(payload);
-
-        if (success) {
-          closeModal();
-          openSuccessModal();
-          cart = [];
-          updateCartUI();
-        } else {
-          alert('Failed to send purchase info. Please try again later.');
-          submitPurchase.disabled = false;
-        }
+        itemDiv.appendChild(nameSpan);
+        itemDiv.appendChild(removeBtn);
+        cartItemsContainer.appendChild(itemDiv);
       });
+    }
 
-      // Close modal events
-      modalClose.addEventListener('click', closeModal);
-      successClose.addEventListener('click', closeSuccessModal);
-      successOk.addEventListener('click', closeSuccessModal);
+    // Remove item from cart by index and re-render
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      renderCartItems();
+    }
 
-      // Close modals on overlay click (optional)
-      modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) closeModal();
-      });
-      successOverlay.addEventListener('click', (e) => {
-        if (e.target === successOverlay) closeSuccessModal();
-      });
+    // Handle product button clicks
+    function handleProductButton(button, productName, productPrice) {
+      if (cartMode) {
+        // Add to cart
+        cart.push({ name: productName, price: productPrice });
+        alert(`Added "${productName}" to your cart.`);
+        renderCartItems();
+      } else {
+        // Purchase flow: open username modal
+        openUsernameModal(productName);
+      }
+    }
 
-      // Add to cart buttons
-      addCartButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const card = button.closest('.product-card');
-          const key = card.dataset.key;
-          const price = parseFloat(card.dataset.price);
-          const title = card.querySelector('.product-title').textContent;
-          addToCart(key, title, price);
-        });
-      });
+    // Username modal references
+    const usernameModal = document.getElementById('usernameModal');
+    const usernameInput = document.getElementById('usernameInput');
+    const submitUsernameBtn = document.getElementById('submitUsernameBtn');
+    let currentProductName = '';
 
-      // Checkout button opens modal
-      checkoutButton.addEventListener('click', () => {
-        openModal();
-      });
+    // Open username modal with product info
+    function openUsernameModal(productName) {
+      currentProductName = productName;
+      usernameInput.value = '';
+      submitUsernameBtn.disabled = true;
+      usernameModal.classList.add('active');
+      usernameInput.focus();
+    }
 
-      // Initialize cart UI on page load
-      updateCartUI();
-    })();
+    // Close username modal
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.remove('active');
+    }
+
+    // Enable submit button if input is not empty
+    usernameInput.addEventListener('input', () => {
+      submitUsernameBtn.disabled = usernameInput.value.trim() === '';
+    });
+
+    // Handle username submit
+    submitUsernameBtn.addEventListener('click', () => {
+      const username = usernameInput.value.trim();
+      if (!username) return;
+
+      alert(`Thank you, ${username}! You purchased "${currentProductName}".`);
+
+      // Here you can add actual purchase processing logic
+
+      closeModal('usernameModal');
+    });
+
+    // Close username modal on outside click or ESC
+    usernameModal.addEventListener('click', (e) => {
+      if (e.target === usernameModal) {
+        closeModal('usernameModal');
+      }
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal('usernameModal');
+      }
+    });
   </script>
 </body>
 </html>
