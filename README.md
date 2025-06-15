@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Keys Shop - Dark Blue Theme</title>
+  <title>Keys Shop - Discord Username Input</title>
   <style>
     /* Reset & basics */
     * {
@@ -62,7 +62,7 @@
     }
 
     .purchase-button {
-      background: #3b82f6; /* bright blue */
+      background: #3b82f6;
       border: none;
       border-radius: 14px;
       padding: 16px 0;
@@ -86,18 +86,115 @@
       transform: scale(0.96);
     }
 
-    /* Responsive text scaling */
-    @media (max-width: 400px) {
-      .product-title {
-        font-size: 1.3rem;
-      }
-      .product-price {
-        font-size: 1rem;
-      }
-      .purchase-button {
-        font-size: 1rem;
-        padding: 14px 0;
-      }
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 35, 75, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: #1e2a47;
+      border-radius: 16px;
+      padding: 30px 28px;
+      width: 320px;
+      box-shadow: 0 12px 30px rgba(20,40,80,0.9);
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      position: relative;
+    }
+
+    .modal h3 {
+      color: #cbd5e1;
+      margin: 0 0 16px 0;
+      font-weight: 700;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .modal p {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin: 0 0 24px 0;
+      text-align: center;
+    }
+
+    .modal input[type="text"] {
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 1rem;
+      outline: none;
+      background: #2a3b67;
+      color: #e0e6f1;
+      box-shadow: inset 0 0 6px rgba(20,40,80,0.9);
+      margin-bottom: 24px;
+      user-select: text;
+    }
+
+    .modal input::placeholder {
+      color: #718096;
+    }
+
+    .modal button.submit-button {
+      background: #3b82f6;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 0;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(59,130,246,0.6);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+    }
+
+    .modal button.submit-button:hover {
+      background: #2563eb;
+      box-shadow: 0 10px 24px rgba(37,99,235,0.8);
+    }
+
+    .modal button.submit-button:active {
+      background: #1e40af;
+      box-shadow: 0 4px 10px rgba(30,64,175,0.9);
+      transform: scale(0.96);
+    }
+
+    .modal .close-button {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: #94a3b8;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s ease;
+    }
+    .modal .close-button:hover {
+      color: #cbd5e1;
+    }
+
+    .modal .status-message {
+      text-align: center;
+      font-size: 1rem;
+      margin-top: 12px;
+      min-height: 20px;
+      user-select: none;
     }
   </style>
 </head>
@@ -106,26 +203,125 @@
     <div class="product-card">
       <h2 class="product-title">1 Week Key</h2>
       <p class="product-price">Price: $1</p>
-      <button class="purchase-button" onclick="purchase('1 Week Key')">Purchase</button>
+      <button class="purchase-button" onclick="openModal('1 Week Key')">Purchase</button>
     </div>
 
     <div class="product-card">
       <h2 class="product-title">1 Month Key</h2>
       <p class="product-price">Price: $5</p>
-      <button class="purchase-button" onclick="purchase('1 Month Key')">Purchase</button>
+      <button class="purchase-button" onclick="openModal('1 Month Key')">Purchase</button>
     </div>
 
     <div class="product-card">
       <h2 class="product-title">1 Year Key</h2>
       <p class="product-price">Price: $50</p>
-      <button class="purchase-button" onclick="purchase('1 Year Key')">Purchase</button>
+      <button class="purchase-button" onclick="openModal('1 Year Key')">Purchase</button>
     </div>
   </main>
 
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="close-button" aria-label="Close modal" onclick="closeModal()">×</button>
+      <h3 id="modalTitle">Input your Discord username</h3>
+      <p>We need your discord user to contact you!</p>
+      <input type="text" id="discordUsername" placeholder="Discord#1234" autocomplete="off" />
+      <button class="submit-button" onclick="submitPurchase()">Submit</button>
+      <div class="status-message" id="statusMessage"></div>
+    </div>
+  </div>
+
   <script>
-    function purchase(keyName) {
-      alert(`Thanks for purchasing the ${keyName}!`);
+    const modal = document.getElementById('modal');
+    const discordInput = document.getElementById('discordUsername');
+    const statusMessage = document.getElementById('statusMessage');
+
+    let selectedKey = null;
+
+    function openModal(keyName) {
+      selectedKey = keyName;
+      discordInput.value = '';
+      statusMessage.textContent = '';
+      modal.classList.add('active');
+      discordInput.focus();
     }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      selectedKey = null;
+    }
+
+    async function submitPurchase() {
+      const username = discordInput.value.trim();
+
+      if (!username) {
+        statusMessage.style.color = '#f87171'; // red
+        statusMessage.textContent = 'Please enter your Discord username.';
+        return;
+      }
+
+      statusMessage.style.color = '#94a3b8';
+      statusMessage.textContent = 'Sending...';
+
+      const webhookUrl = 'https://discord.com/api/webhooks/1380632133990875156/uTfUbEfNGj5Qbev8F0cDFVGU1TVVtRRrZxGG2TJJXkbXEvXi3AaVHQ61z7dBk2qe7Na9';
+
+      const payload = {
+        username: "Key Purchase Bot",
+        embeds: [
+          {
+            title: "New Key Purchase",
+            color: 0x3b82f6, // Blue color
+            fields: [
+              {
+                name: "Purchased Key",
+                value: selectedKey,
+                inline: true
+              },
+              {
+                name: "Discord Username",
+                value: username,
+                inline: true
+              }
+            ],
+            timestamp: new Date().toISOString()
+          }
+        ]
+      };
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          statusMessage.style.color = '#34d399'; // green
+          statusMessage.textContent = 'Purchase info sent successfully! We will contact you soon.';
+          setTimeout(closeModal, 3000);
+        } else {
+          throw new Error(`Webhook error: ${response.status}`);
+        }
+      } catch (error) {
+        console.error(error);
+        statusMessage.style.color = '#f87171';
+        statusMessage.textContent = 'Failed to send data. Please try again later.';
+      }
+    }
+
+    // Close modal on outside click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Close modal on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
   </script>
 </body>
 </html>
