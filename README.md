@@ -1,168 +1,128 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Need Help?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modern Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #0f172a, #1e293b);
-      color: #e2e8f0;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      padding: 30px;
+      height: 100vh;
     }
 
-    .container {
-      position: relative;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 24px;
-      padding: 40px 30px;
-      max-width: 480px;
-      width: 100%;
-      text-align: center;
+    .calculator {
+      background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(15px);
-      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
-      overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      padding: 30px;
+      width: 320px;
     }
 
-    .corner-overlay {
-      pointer-events: none;
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 24px;
-      border: 2px solid rgba(96, 165, 250, 0.5);
-      box-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
-      opacity: 0;
-      transition: opacity 1s ease;
-      z-index: 0;
+    .display {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 2rem;
+      color: #fff;
+      text-align: right;
+      margin-bottom: 20px;
+      word-wrap: break-word;
+      min-height: 50px;
     }
 
-    .corner-active .corner-overlay {
-      opacity: 1;
-      animation: cornerPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes cornerPulse {
-      0% {
-        box-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
-      }
-      50% {
-        box-shadow: 0 0 20px rgba(96, 165, 250, 0.6);
-      }
-      100% {
-        box-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
-      }
-    }
-
-    h1 {
-      font-size: 1.8rem;
-      color: #ef4444;
-      margin-bottom: 16px;
-      text-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
-      position: relative;
-      z-index: 1;
-    }
-
-    h2, p, button {
-      position: relative;
-      z-index: 1;
-    }
-
-    h2 {
-      font-size: 1.4rem;
-      color: #60a5fa;
-      margin-bottom: 6px;
-    }
-
-    p {
-      font-size: 1rem;
-      color: #94a3b8;
-      margin-bottom: 24px;
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
     }
 
     button {
-      background: linear-gradient(to right, #3b82f6, #60a5fa);
-      color: white;
+      background: rgba(255, 255, 255, 0.15);
       border: none;
-      padding: 14px 28px;
-      font-size: 1rem;
-      border-radius: 16px;
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 1.2rem;
+      color: #fff;
       cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 6px 24px rgba(96, 165, 250, 0.6);
+      transition: all 0.2s ease-in-out;
     }
 
     button:hover {
-      background: linear-gradient(to right, #60a5fa, #3b82f6);
-      box-shadow:
-        0 0 0 2px #3b82f6,
-        0 0 20px 8px rgba(96, 165, 250, 0.8),
-        0 10px 60px rgba(0, 0, 0, 0.55);
-      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.05);
     }
 
-    .logo {
-      margin-top: 32px;
-      width: 100%;
-      max-width: 360px;
-      height: auto;
-      border-radius: 16px;
-      box-shadow:
-        0 10px 30px rgba(30, 58, 138, 0.5),
-        0 6px 16px rgba(0, 0, 0, 0.25);
-      position: relative;
-      z-index: 1;
+    button.operator {
+      background-color: #ff6f61;
     }
 
-    @media (max-width: 500px) {
-      .container {
-        padding: 30px 20px;
-      }
+    button.equals {
+      background-color: #28c76f;
+      grid-column: span 2;
+    }
 
-      .logo {
-        max-width: 100%;
-      }
+    button.clear {
+      background-color: #ff3f34;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="cornerBox">
-    <div class="corner-overlay"></div>
-
-    <h1>DO NOT TRY TO BYPASS THE KEY SYSTEM!</h1>
-    <h2>Need assistance?</h2>
-    <p>Join our verified Discord support server below</p>
-
-    <button onclick="window.location.href='https://discord.gg/FepZCVDN'">
-      Join Support Server
-    </button>
-
-    <img
-      src="https://cdn.discordapp.com/attachments/1220824376123850752/1380312327806521415/NEXORA_SCRIPTS.png?ex=68436b87&is=68421a07&hm=75511ffd508259721d6878428d9e02059d0e3a937b29747089e999d58be8d8e4&"
-      alt="NEXORA SCRIPTS Logo"
-      class="logo"
-    />
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button onclick="appendValue('(')">(</button>
+      <button onclick="appendValue(')')">)</button>
+      <button class="operator" onclick="appendValue('/')">÷</button>
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button class="operator" onclick="appendValue('*')">×</button>
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button class="operator" onclick="appendValue('-')">−</button>
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button class="operator" onclick="appendValue('+')">+</button>
+      <button onclick="appendValue('0')">0</button>
+      <button onclick="appendValue('.')">.</button>
+      <button class="equals" onclick="calculate()">=</button>
+    </div>
   </div>
 
   <script>
-    const box = document.getElementById("cornerBox");
-    let fadeTimeout;
+    const display = document.getElementById('display');
 
-    box.addEventListener("mouseenter", () => {
-      clearTimeout(fadeTimeout);
-      box.classList.add("corner-active");
-    });
+    function appendValue(val) {
+      if (display.innerText === '0') display.innerText = '';
+      display.innerText += val;
+    }
 
-    box.addEventListener("mouseleave", () => {
-      fadeTimeout = setTimeout(() => {
-        box.classList.remove("corner-active");
-      }, 1000); // 1s fade out
-    });
+    function clearDisplay() {
+      display.innerText = '0';
+    }
+
+    function calculate() {
+      try {
+        display.innerText = eval(display.innerText.replace(/÷/g, '/').replace(/×/g, '*'));
+      } catch {
+        display.innerText = 'Error';
+      }
+    }
   </script>
 </body>
 </html>
