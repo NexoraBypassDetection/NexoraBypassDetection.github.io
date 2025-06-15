@@ -81,6 +81,7 @@
     button.equals:hover,
     button.clear:hover {
       background: linear-gradient(145deg, #255980, #0e2a3c);
+      transform: translateY(-4px);
       box-shadow: 0 0 12px #00aaff, 0 0 24px #007BFF;
     }
 
@@ -94,8 +95,8 @@
     <div class="display" id="display">0</div>
     <div class="buttons">
       <button class="clear" onclick="clearDisplay()">C</button>
-      <button onclick="appendValue('(')">(</button>
-      <button onclick="appendValue(')')">)</button>
+      <button class="operator" onclick="appendValue('(')">(</button>
+      <button class="operator" onclick="appendValue(')')">)</button>
       <button class="operator" onclick="appendValue('/')">÷</button>
       <button onclick="appendValue('7')">7</button>
       <button onclick="appendValue('8')">8</button>
