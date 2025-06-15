@@ -296,7 +296,6 @@ async function submitPurchase() {
         fields: [
           { name: "Purchased Key", value: selectedKey, inline: true },
           { name: "Discord Username", value: discordUsername, inline: true }
-          { name: "Roblox Username", value: robloxUsername, inline: true }
           // Removed Roblox username field
         ],
         timestamp: new Date().toISOString()
