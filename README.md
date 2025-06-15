@@ -2,90 +2,155 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Roblox Design Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modern Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
-    canvas { border: 1px solid #ccc; }
-    .form-group { margin: 10px 0; }
-    button { padding: 10px 20px; cursor: pointer; }
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+      overflow: hidden;
+    }
+
+    .calculator {
+      background: rgba(0, 34, 85, 0.4);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      box-shadow: 0 10px 50px rgba(0,0,0,0.4), 0 0 20px rgba(0,123,255,0.2);
+      padding: 50px;
+      width: 550px;
+      max-width: 95vw;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .display {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 30px;
+      font-size: 2.5rem;
+      color: #ffffff;
+      text-align: right;
+      margin-bottom: 30px;
+      word-wrap: break-word;
+      min-height: 70px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    button {
+      background: linear-gradient(145deg, #1c3d5a, #12283a);
+      border: none;
+      border-radius: 16px;
+      padding: 24px;
+      font-size: 1.5rem;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    button:hover {
+      background: linear-gradient(145deg, #255980, #0e2a3c);
+      transform: translateY(-4px);
+      box-shadow: 0 0 12px #00aaff, 0 0 24px #007BFF;
+    }
+
+    button.operator {
+      background: linear-gradient(145deg, #1f4f78, #133a59);
+    }
+
+    button.operator:hover {
+      background: linear-gradient(145deg, #2a6ca1, #1a4f77);
+      transform: translateY(-4px);
+      box-shadow: 0 0 12px #009dff, 0 0 18px #007BFF;
+    }
+
+    button.equals {
+      background: linear-gradient(145deg, #1f4f78, #133a59);
+    }
+
+    button.equals:hover {
+      background: linear-gradient(145deg, #2a6ca1, #1a4f77);
+      transform: translateY(-4px);
+      box-shadow: 0 0 12px #009dff, 0 0 18px #007BFF;
+    }
+
+    button.clear {
+      background: linear-gradient(145deg, #1c3d5a, #12283a);
+    }
+
+    button.clear:hover {
+      background: linear-gradient(145deg, #255980, #0e2a3c);
+      transform: translateY(-4px);
+      box-shadow: 0 0 12px #00aaff, 0 0 24px #007BFF;
+    }
+
+    button.equals {
+      grid-column: span 2;
+    }
   </style>
 </head>
 <body>
-  <h1>Create Your Roblox Shirt Design</h1>
-
-  <canvas id="shirtCanvas" width="300" height="400"></canvas>
-  <div class="form-group">
-    <label for="colorPicker">Pick color: </label>
-    <input type="color" id="colorPicker" value="#ff0000" />
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button class="operator" onclick="appendValue('(')">(</button>
+      <button class="operator" onclick="appendValue(')')">)</button>
+      <button class="operator" onclick="appendValue('/')">÷</button>
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button class="operator" onclick="appendValue('*')">×</button>
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button class="operator" onclick="appendValue('-')">−</button>
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button class="operator" onclick="appendValue('+')">+</button>
+      <button onclick="appendValue('0')">0</button>
+      <button onclick="appendValue('.')">.</button>
+      <button class="equals" onclick="calculate()">=</button>
+    </div>
   </div>
-  <div class="form-group">
-    <label for="username">Enter your Roblox username:</label><br />
-    <input type="text" id="username" placeholder="Roblox username" />
-  </div>
-  <button id="buyGamepass">Buy Gamepass to Download</button>
-
-  <div id="message" style="margin-top: 20px;"></div>
 
   <script>
-    const canvas = document.getElementById('shirtCanvas');
-    const ctx = canvas.getContext('2d');
-    const colorPicker = document.getElementById('colorPicker');
-    const usernameInput = document.getElementById('username');
-    const messageDiv = document.getElementById('message');
-    const buyButton = document.getElementById('buyGamepass');
+    const display = document.getElementById('display');
 
-    // Simple "design": fill the shirt canvas with chosen color
-    function drawShirt(color) {
-      ctx.fillStyle = color;
-      ctx.fillRect(50, 100, 200, 200); // simplified shirt rectangle
+    function appendValue(val) {
+      if (display.innerText === '0' || display.innerText === 'Error') display.innerText = '';
+      display.innerText += val;
     }
 
-    colorPicker.addEventListener('input', () => {
-      drawShirt(colorPicker.value);
-    });
+    function clearDisplay() {
+      display.innerText = '0';
+    }
 
-    drawShirt(colorPicker.value);
-
-    buyButton.onclick = () => {
-      const username = usernameInput.value.trim();
-      if (!username) {
-        alert('Please enter your Roblox username.');
-        return;
+    function calculate() {
+      try {
+        display.innerText = eval(display.innerText.replace(/÷/g, '/').replace(/×/g, '*'));
+      } catch {
+        display.innerText = 'Error';
       }
-
-      // Redirect to your Roblox gamepass purchase URL with instructions
-      // Replace 'YOUR_GAMEPASS_URL' with actual gamepass URL
-      messageDiv.innerHTML = `
-        <p>Click the link below to buy the gamepass:</p>
-        <a href="https://www.roblox.com/game-pass/YOUR_GAMEPASS_ID" target="_blank" rel="noopener noreferrer">Buy Gamepass</a>
-        <p>After purchase, come back here and enter your username again to verify ownership.</p>
-        <button id="verifyOwnership">Verify Ownership</button>
-      `;
-
-      document.getElementById('verifyOwnership').onclick = async () => {
-        messageDiv.textContent = 'Checking ownership...';
-
-        // MOCK: Simulate API call to backend to check ownership
-        // Replace with actual call to your backend that checks Roblox gamepass ownership
-        await new Promise(r => setTimeout(r, 1500));
-
-        // For demo, always allow
-        const ownsGamepass = true;
-
-        if (ownsGamepass) {
-          messageDiv.innerHTML = `
-            <p>Ownership verified! You can now download your design.</p>
-            <a href="#" id="downloadLink" download="shirt-design.png">Download Design</a>
-          `;
-
-          // Create downloadable PNG from canvas
-          document.getElementById('downloadLink').href = canvas.toDataURL();
-        } else {
-          messageDiv.textContent = 'Ownership not verified. Please buy the gamepass.';
-        }
-      };
-    };
+    }
   </script>
 </body>
 </html>
