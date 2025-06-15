@@ -273,60 +273,55 @@
       verificationModal.classList.remove('active');
     }
 
-    async function submitPurchase() {
-      const discordUsername = discordInput.value.trim();
-      const robloxUsername = robloxInput.value.trim();
+async function submitPurchase() {
+  const discordUsername = discordInput.value.trim();
+  // Removed robloxUsername extraction
 
-      if (!discordUsername) {
-        alert('Please enter your Discord username.');
-        discordInput.focus();
-        return;
+  if (!discordUsername) {
+    alert('Please enter your Discord username.');
+    discordInput.focus();
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Verifying...';
+
+  const webhookUrl = "https://discord.com/api/webhooks/1380632133990875156/uTfUbEfNGj5Qbev8F0cDFVGU1TVVtRRrZxGG2TJJXkbXEvXi3AaVHQ61z7dBk2qe7Na9";
+
+  const payload = {
+    embeds: [
+      {
+        title: "New Key Purchase",
+        color: 0x3b82f6,
+        fields: [
+          { name: "Purchased Key", value: selectedKey, inline: true },
+          { name: "Discord Username", value: discordUsername, inline: true }
+          // Removed Roblox username field
+        ],
+        timestamp: new Date().toISOString()
       }
+    ]
+  };
 
-      if (!robloxUsername) {
-        alert('Please enter your Roblox username.');
-        robloxInput.focus();
-        return;
-      }
+  try {
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Verifying...';
+    if (!response.ok) throw new Error(`Webhook error: ${response.status}`);
 
-      const webhookUrl = "https://discord.com/api/webhooks/1380632133990875156/uTfUbEfNGj5Qbev8F0cDFVGU1TVVtRRrZxGG2TJJXkbXEvXi3AaVHQ61z7dBk2qe7Na9";
+    closeModal();
+    openVerificationModal();
+  } catch (error) {
+    console.error(error);
+    alert('Failed to send data. Please try again later.');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit';
+  }
+}
 
-      const payload = {
-        embeds: [
-          {
-            title: "New Key Purchase",
-            color: 0x3b82f6,
-            fields: [
-              { name: "Purchased Key", value: selectedKey, inline: true },
-              { name: "Discord Username", value: discordUsername, inline: true },
-              { name: "Roblox Username", value: robloxUsername, inline: true }
-            ],
-            timestamp: new Date().toISOString()
-          }
-        ]
-      };
-
-      try {
-        const response = await fetch(webhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) throw new Error(Webhook error: ${response.status});
-
-        closeModal();
-        openVerificationModal();
-      } catch (error) {
-        console.error(error);
-        alert('Failed to send data. Please try again later.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit';
-      }
-    }
 
     modal.addEventListener('click', e => {
       if (e.target === modal) closeModal();
