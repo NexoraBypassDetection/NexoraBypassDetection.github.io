@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Keys Shop - Discord Username Input</title>
+  <title>Keys Shop - Discord & Roblox Username Input</title>
   <style>
     /* Reset & basics */
     * {
@@ -140,7 +140,7 @@
       background: #2a3b67;
       color: #e0e6f1;
       box-shadow: inset 0 0 6px rgba(20,40,80,0.9);
-      margin-bottom: 24px;
+      margin-bottom: 16px;
       user-select: text;
     }
 
@@ -223,9 +223,10 @@
   <div class="modal-overlay" id="modal">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <button class="close-button" aria-label="Close modal" onclick="closeModal()">×</button>
-      <h3 id="modalTitle">Input your Discord username</h3>
-      <p>We need your discord user to contact you!</p>
+      <h3 id="modalTitle">Input your Discord & Roblox usernames</h3>
+      <p>We need your Discord and Roblox usernames to contact you!</p>
       <input type="text" id="discordUsername" placeholder="Discord#1234" autocomplete="off" />
+      <input type="text" id="robloxUsername" placeholder="Roblox Username" autocomplete="off" />
       <button class="submit-button" onclick="submitPurchase()">Submit</button>
       <div class="status-message" id="statusMessage"></div>
     </div>
@@ -234,6 +235,7 @@
   <script>
     const modal = document.getElementById('modal');
     const discordInput = document.getElementById('discordUsername');
+    const robloxInput = document.getElementById('robloxUsername');
     const statusMessage = document.getElementById('statusMessage');
 
     let selectedKey = null;
@@ -241,6 +243,7 @@
     function openModal(keyName) {
       selectedKey = keyName;
       discordInput.value = '';
+      robloxInput.value = '';
       statusMessage.textContent = '';
       modal.classList.add('active');
       discordInput.focus();
@@ -252,11 +255,18 @@
     }
 
     async function submitPurchase() {
-      const username = discordInput.value.trim();
+      const discordUsername = discordInput.value.trim();
+      const robloxUsername = robloxInput.value.trim();
 
-      if (!username) {
+      if (!discordUsername) {
         statusMessage.style.color = '#f87171'; // red
         statusMessage.textContent = 'Please enter your Discord username.';
+        return;
+      }
+
+      if (!robloxUsername) {
+        statusMessage.style.color = '#f87171'; // red
+        statusMessage.textContent = 'Please enter your Roblox username.';
         return;
       }
 
@@ -270,18 +280,11 @@
         embeds: [
           {
             title: "New Key Purchase",
-            color: 0x3b82f6, // Blue color
+            color: 0x3b82f6,
             fields: [
-              {
-                name: "Purchased Key",
-                value: selectedKey,
-                inline: true
-              },
-              {
-                name: "Discord Username",
-                value: username,
-                inline: true
-              }
+              { name: "Purchased Key", value: selectedKey, inline: true },
+              { name: "Discord Username", value: discordUsername, inline: true },
+              { name: "Roblox Username", value: robloxUsername, inline: true }
             ],
             timestamp: new Date().toISOString()
           }
@@ -291,9 +294,7 @@
       try {
         const response = await fetch(webhookUrl, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
@@ -312,12 +313,12 @@
     }
 
     // Close modal on outside click
-    modal.addEventListener('click', (e) => {
+    modal.addEventListener('click', e => {
       if (e.target === modal) closeModal();
     });
 
     // Close modal on Escape key
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener('keydown', e => {
       if (e.key === 'Escape' && modal.classList.contains('active')) {
         closeModal();
       }
