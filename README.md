@@ -1,4 +1,4 @@
-Purchase valid keys for an limited time period of use below! Join our discord server for easier support and communication! <a href="https://discord.gg/822Hm8t4QS">Join Server</a>
+Purchase valid keys for an limited time period of use below! Join our discord server for easier support and communication! <a href="https://discord.gg/pizza">Join Server</a>
 
 <html lang="en">
 <head>
