@@ -298,7 +298,7 @@
       const username = discordUsernameInput.value.trim();
       if (!username) return;
 
-      const webhookUrl = 'YOUR_WEBHOOK_URL_HERE';
+      const webhookUrl = 'https://discord.com/api/webhooks/1384168262199410690/Mf56mxY1uHTQBBNuUghceqLC-qQpDLNjIzrT4isDtqKpSwPi6Xevmsh1hpdpJ-pWwG-X';
 
       const payload = {
         username: "Key Shop Bot",
