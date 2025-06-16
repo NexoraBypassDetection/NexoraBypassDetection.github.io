@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+Buy keys below if you dont want to complete the lootlabs * You will have to wait until a STAFF MEMBER contacts you through discord!
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
