@@ -1,9 +1,9 @@
-Purchase keys below!
+Purchase valid keys below for a limited time of use!
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Keys Shop - Discord & Roblox Username Input</title>
+  <title>Keys Shop - Discord Username Input</title>
   <style>
     /* Reset & basics */
     * {
@@ -19,6 +19,8 @@ Purchase keys below!
       align-items: flex-start;
       min-height: 100vh;
       padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
     }
 
     .shop-container {
@@ -149,8 +151,7 @@ Purchase keys below!
       color: #6b7280;
     }
 
-    .modal button.submit-button,
-    .modal button.ok-button {
+    .modal button.submit-button {
       background: #3b82f6;
       border: none;
       border-radius: 14px;
@@ -164,14 +165,12 @@ Purchase keys below!
       user-select: none;
     }
 
-    .modal button.submit-button:hover,
-    .modal button.ok-button:hover {
+    .modal button.submit-button:hover {
       background: #2563eb;
       box-shadow: 0 10px 24px rgba(37,99,235,0.8);
     }
 
-    .modal button.submit-button:active,
-    .modal button.ok-button:active {
+    .modal button.submit-button:active {
       background: #1e40af;
       box-shadow: 0 4px 10px rgba(30,64,175,0.9);
       transform: scale(0.96);
@@ -200,6 +199,69 @@ Purchase keys below!
     .modal .close-button:hover {
       color: #e2e8f0;
     }
+
+    /* Custom notification container and styles */
+    #notification-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 2000;
+      pointer-events: none;
+      width: 320px;
+      max-width: 90vw;
+    }
+
+    .notification {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      pointer-events: auto;
+      user-select: none;
+      animation: slideUpFadeIn 0.4s ease forwards;
+    }
+
+    @keyframes slideUpFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .notification.success {
+      background-color: #e0f0ff;
+      color: #2563eb;
+      border: 1.5px solid #2563eb;
+    }
+
+    .notification.error {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      border: 1.5px solid #b91c1c;
+    }
+
+    /* Icons */
+    .notification svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
   </style>
 </head>
 <body>
@@ -211,119 +273,116 @@ Purchase keys below!
     </div>
     <div class="product-card">
       <h2 class="product-title">1 Month Key</h2>
-      <p class="product-price">Price: $5</p>
+      <p class="product-price">Price: $3</p>
       <button class="purchase-button" onclick="openModal('1 Month Key')">Purchase</button>
     </div>
     <div class="product-card">
-      <h2 class="product-title">1 Year Key</h2>
-      <p class="product-price">Price: $50</p>
-      <button class="purchase-button" onclick="openModal('1 Year Key')">Purchase</button>
+      <h2 class="product-title">Lifetime Key</h2>
+      <p class="product-price">Price: $10</p>
+      <button class="purchase-button" onclick="openModal('Lifetime Key')">Purchase</button>
     </div>
   </main>
 
-  <!-- Modal: Input form -->
-  <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
-    <div class="modal">
-      <button class="close-button" aria-label="Close modal" onclick="closeModal()">&times;</button>
-      <h3 id="modalTitle">Input your Discord & Roblox usernames</h3>
-      <p>We need your Discord and Roblox usernames to contact you!</p>
-      <input type="text" id="discordUsername" placeholder="Discord#1234" autocomplete="off" />
-      <input type="text" id="robloxUsername" placeholder="Roblox Username" autocomplete="off" />
-      <button class="submit-button" id="submitBtn" onclick="submitPurchase()">Submit</button>
+  <!-- Modal -->
+  <div id="modal-overlay" class="modal-overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="close-button" aria-label="Close modal" onclick="closeModal()">×</button>
+      <h3 id="modal-title">Enter Your Discord Username</h3>
+      <input type="text" id="discord-username" placeholder="User#1234" autocomplete="off" />
+      <button class="submit-button" id="submit-btn" onclick="submitData()">Submit</button>
     </div>
   </div>
 
-  <!-- Modal: Verification -->
-  <div class="modal-overlay" id="verificationModal" role="dialog" aria-modal="true" aria-labelledby="verificationTitle" tabindex="-1">
-    <div class="modal">
-      <h3 id="verificationTitle">Thank you!</h3>
-      <p>Thanks, we will contact you as soon as possible!</p>
-      <button class="ok-button" onclick="closeVerificationModal()">Ok</button>
-    </div>
-  </div>
+  <!-- Notification Container -->
+  <div id="notification-container" aria-live="polite" aria-atomic="true"></div>
 
   <script>
-    const modal = document.getElementById('modal');
-    const verificationModal = document.getElementById('verificationModal');
-    const discordInput = document.getElementById('discordUsername');
-    const robloxInput = document.getElementById('robloxUsername');
-    const submitBtn = document.getElementById('submitBtn');
-    let selectedKey = null;
+    const modalOverlay = document.getElementById('modal-overlay');
+    const discordInput = document.getElementById('discord-username');
+    const submitBtn = document.getElementById('submit-btn');
+    const notificationContainer = document.getElementById('notification-container');
+
+    let currentKeyName = '';
 
     function openModal(keyName) {
-      selectedKey = keyName;
+      currentKeyName = keyName;
       discordInput.value = '';
-      robloxInput.value = '';
       submitBtn.disabled = false;
       submitBtn.textContent = 'Submit';
-      modal.classList.add('active');
+      modalOverlay.classList.add('active');
       discordInput.focus();
     }
 
     function closeModal() {
-      modal.classList.remove('active');
-      selectedKey = null;
+      modalOverlay.classList.remove('active');
     }
 
-    function openVerificationModal() {
-      verificationModal.classList.add('active');
-      verificationModal.querySelector('button.ok-button').focus();
+    // Helper to create SVG icons
+    function createIcon(type) {
+      if (type === 'error') {
+        // Red Cross icon
+        return `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        `;
+      } else if (type === 'success') {
+        // Blue Checkmark icon
+        return `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        `;
+      }
     }
 
-    function closeVerificationModal() {
-      verificationModal.classList.remove('active');
+    // Show notification (type: 'success' or 'error'), message string
+    function showNotification(type, message) {
+      const notif = document.createElement('div');
+      notif.className = `notification ${type}`;
+      notif.setAttribute('role', 'alert');
+
+      notif.innerHTML = `${createIcon(type)}<span>${message}</span>`;
+
+      notificationContainer.appendChild(notif);
+
+      // Auto remove after 4 seconds
+      setTimeout(() => {
+        notif.style.opacity = '0';
+        notif.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          notif.remove();
+        }, 400);
+      }, 4000);
     }
 
-    function validateDiscord(username) {
-      // Basic Discord username#1234 format validation
-      return /^.{2,32}#\d{4}$/.test(username);
-    }
-
-    function validateRoblox(username) {
-      // Roblox usernames must be 3-20 chars, alphanumeric + underscores
-      return /^[a-zA-Z0-9_]{3,20}$/.test(username);
-    }
-
-    async function submitPurchase() {
+    async function submitData() {
       const discordUsername = discordInput.value.trim();
-      const robloxUsername = robloxInput.value.trim();
 
       if (!discordUsername) {
-        alert('Please enter your Discord username.');
-        discordInput.focus();
-        return;
-      }
-      if (!validateDiscord(discordUsername)) {
-        alert('Please enter a valid Discord username (e.g., User#1234).');
+        showNotification('error', '❌ Please enter your Discord username');
         discordInput.focus();
         return;
       }
 
-      if (!robloxUsername) {
-        alert('Please enter your Roblox username.');
-        robloxInput.focus();
-        return;
-      }
-      if (!validateRoblox(robloxUsername)) {
-        alert('Please enter a valid Roblox username (3-20 characters, letters, numbers, underscores).');
-        robloxInput.focus();
-        return;
-      }
+      // Optionally add more username validation here (e.g., format "User#1234")
 
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Verifying...';
+      submitBtn.textContent = 'Submitting...';
 
-      const webhookUrl = "https://discord.com/api/webhooks/1384168262199410690/Mf56mxY1uHTQBBNuUghceqLC-qQpDLNjIzrT4isDtqKpSwPi6Xevmsh1hpdpJ-pWwG-X";
+      // Prepare webhook payload
+      const webhookUrl = 'YOUR_DISCORD_WEBHOOK_URL'; // <-- Replace with your webhook URL
 
       const payload = {
+        username: "Keys Shop",
         embeds: [
           {
             title: "New Key Purchase",
-            color: 0x3b82f6,
+            color: 3447003,
             fields: [
-              { name: "Purchased Key", value: selectedKey || 'N/A', inline: true },
-              { name: "Discord Username", value: discordUsername, inline: true },
-              { name: "Roblox Username", value: robloxUsername, inline: true }
+              { name: "Key Name", value: currentKeyName, inline: true },
+              { name: "Discord Username", value: discordUsername, inline: true }
             ],
             timestamp: new Date().toISOString(),
             footer: { text: "Keys Shop" }
@@ -340,24 +399,23 @@ Purchase keys below!
 
         if (response.ok) {
           closeModal();
-          openVerificationModal();
+          showNotification('success', '✔️ Purchase submitted! Please check your Discord.');
         } else {
-          alert('Failed to submit. Please try again later.');
+          showNotification('error', '❌ Failed to submit. Please try again later.');
           submitBtn.disabled = false;
           submitBtn.textContent = 'Submit';
         }
       } catch (error) {
-        alert('Error submitting data. Please check your connection.');
+        showNotification('error', '❌ Error submitting data. Check your connection.');
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit';
       }
     }
 
-    // Optional: close modals on pressing Escape
+    // Close modal on Escape
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        if (modal.classList.contains('active')) closeModal();
-        if (verificationModal.classList.contains('active')) closeVerificationModal();
+      if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+        closeModal();
       }
     });
   </script>
