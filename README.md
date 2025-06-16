@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+Pruchase valid keys for an limited time period of use below!
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
