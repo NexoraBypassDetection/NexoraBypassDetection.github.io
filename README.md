@@ -16,7 +16,7 @@
   </style>
 </head>
 <body>
-  <h1>Welcome to my GitHub Page!</h1>
+  <h1>Welcome to MYYYYY GitHub Page!</h1>
   <p>This page has been visited:</p>
   <div id="visits">Loading...</div>
   <p>times.</p>
