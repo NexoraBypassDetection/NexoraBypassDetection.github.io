@@ -16,24 +16,30 @@
   </style>
 </head>
 <body>
-  <h1>Welcome to my site!</h1>
+  <h1>Welcome to my GitHub Page!</h1>
   <p>This page has been visited:</p>
   <div id="visits">Loading...</div>
   <p>times.</p>
 
   <script>
-    const namespace = "NexoraBypassDetection"; // change to your unique ID
-    const key = "ut_e4nlNx1iPMqnRfK8gNKDSqY1Q6HZ6nQ3UswW1U4K"; // change to anything (page name, etc.)
+    const COUNTER_SLUG = "your-counter-slug"; // replace this with your actual counter name
+    const API_KEY = "ut_e4nlNx1iPMqnRfK8gNKDSqY1Q6HZ6nQ3UswW1U4K"; // your API key
 
-    fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("visits").textContent = data.value;
-      })
-      .catch(err => {
-        document.getElementById("visits").textContent = "Error";
-        console.error("CountAPI error:", err);
-      });
+    fetch(`https://counterapi.dev/api/v1/counter/${COUNTER_SLUG}/hit`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Content-Type": "application/json"
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("visits").textContent = data.count;
+    })
+    .catch(err => {
+      document.getElementById("visits").textContent = "Error";
+      console.error("CounterAPI error:", err);
+    });
   </script>
 </body>
 </html>
