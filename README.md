@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -12,7 +12,7 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #050d1a, #0b1224); /* Darker background */
+      background: linear-gradient(135deg, #050d1a, #0b1224);
       color: #dce3f0;
       display: flex;
       justify-content: center;
@@ -30,7 +30,7 @@
     }
 
     .product-card {
-      background: #111827; /* Darker card */
+      background: #111827;
       border-radius: 16px;
       box-shadow: 0 8px 20px rgba(10, 20, 40, 0.7);
       padding: 24px 20px;
@@ -90,7 +90,7 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(5, 12, 25, 0.88); /* Darker overlay */
+      background: rgba(5, 12, 25, 0.88);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -242,105 +242,84 @@
     </div>
   </div>
 
-  <!-- Stripe.js -->
-  <script src="https://js.stripe.com/v3/"></script>
-
   <script>
     const modal = document.getElementById('modal');
     const verificationModal = document.getElementById('verificationModal');
     const discordInput = document.getElementById('discordUsername');
     const robloxInput = document.getElementById('robloxUsername');
     const submitBtn = document.getElementById('submitBtn');
-    let selectedKey = null;
 
-    // Your Stripe publishable key here (replace with your actual key)
-    const stripe = Stripe('pk_test_51RVZ74CzsKbGXHqjyfTCtW5lriI6ENdhmXJlWYYlU8vp5ZBYCF5fSManbUA8yeNXHKLrmgzUbYlhwwWBG31cz2OA00CXFJKtty'); 
+    let selectedProduct = null;
 
-    // Replace these with your actual Stripe Price IDs for each product
-    const priceIDs = {
-      '1 Week Key': 'price_1RagieCzsKbGXHqjSGrGHmDO',  
-      '1 Month Key': 'price_1XXXXXX2',
-      '1 Year Key': 'price_1XXXXXX3'
+    // Replace these URLs with your real Stripe Payment Links URLs
+    const paymentLinks = {
+      "1 Week Key": "https://buy.stripe.com/test_fZubJ07lr98rcF40M0gbm01",
+      "1 Month Key": "https://buy.stripe.com/test_1MonthKeyPaymentLink",
+      "1 Year Key": "https://buy.stripe.com/test_1YearKeyPaymentLink"
     };
 
-    function openModal(keyName) {
-      selectedKey = keyName;
+    function openModal(product) {
+      selectedProduct = product;
       discordInput.value = '';
       robloxInput.value = '';
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit';
       modal.classList.add('active');
       discordInput.focus();
     }
 
     function closeModal() {
       modal.classList.remove('active');
-      selectedKey = null;
-    }
-
-    function openVerificationModal() {
-      verificationModal.classList.add('active');
     }
 
     function closeVerificationModal() {
       verificationModal.classList.remove('active');
     }
 
-    async function submitPurchase() {
-      const discordUsername = discordInput.value.trim();
-      const robloxUsername = robloxInput.value.trim();
+    function submitPurchase() {
+      const discord = discordInput.value.trim();
+      const roblox = robloxInput.value.trim();
 
-      if (!discordUsername) {
-        alert('Please enter your Discord username.');
-        discordInput.focus();
-        return;
-      }
-      if (!robloxUsername) {
-        alert('Please enter your Roblox username.');
-        robloxInput.focus();
+      if (!discord || !roblox) {
+        alert('Please enter both your Discord and Roblox usernames.');
         return;
       }
 
+      // Here you can add validation for Discord format (e.g. username#1234) if you want
+
+      // Disable the button to prevent multiple clicks
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Redirecting to payment...';
 
-      // Get the price ID for the selected key
-      const priceId = priceIDs[selectedKey];
-      if (!priceId) {
-        alert('Invalid product selected. Please try again.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit';
-        return;
-      }
+      // Close input modal
+      closeModal();
 
-      try {
-        // Redirect to Stripe Checkout
-        const { error } = await stripe.redirectToCheckout({
-          lineItems: [{ price: priceId, quantity: 1 }],
-          mode: 'payment',
-          successUrl: window.location.origin + '/success.html?discord=' + encodeURIComponent(discordUsername) + '&roblox=' + encodeURIComponent(robloxUsername) + '&key=' + encodeURIComponent(selectedKey),
-          cancelUrl: window.location.href
-        });
+      // Show verification modal
+      verificationModal.classList.add('active');
 
-        if (error) {
-          alert(error.message);
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Submit';
-        }
-      } catch (err) {
-        alert('Payment failed: ' + err.message);
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit';
+      // Log the usernames and product - here you can send it to your server if needed
+      console.log(`User wants to buy: ${selectedProduct}`);
+      console.log(`Discord: ${discord}`);
+      console.log(`Roblox: ${roblox}`);
+
+      // Open Stripe Payment Link in new tab
+      const url = paymentLinks[selectedProduct];
+      if (url) {
+        window.open(url, '_blank');
+      } else {
+        alert('Payment link not configured for this product.');
       }
     }
 
-    // Optionally, check on page load if redirected from Stripe success
-    window.addEventListener('DOMContentLoaded', () => {
-      // Check for success query params
-      const params = new URLSearchParams(window.location.search);
-      if (window.location.pathname === '/success.html') {
-        // Here you can send webhook or just show thank you message
-        openVerificationModal();
+    // Close modals when clicking outside modal content
+    window.addEventListener('click', (event) => {
+      if (event.target === modal) closeModal();
+      if (event.target === verificationModal) closeVerificationModal();
+    });
+
+    // Close modal on Escape key
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeModal();
+        closeVerificationModal();
       }
     });
   </script>
