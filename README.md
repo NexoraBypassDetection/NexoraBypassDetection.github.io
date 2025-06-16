@@ -1,4 +1,4 @@
-TESTfdgheth
+Purchase valid keys for an limited time period of use.
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -12,7 +12,7 @@ TESTfdgheth
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #050d1a, #0b1224); /* Darker background */
+      background: linear-gradient(135deg, #050d1a, #0b1224);
       color: #dce3f0;
       display: flex;
       justify-content: center;
@@ -30,7 +30,7 @@ TESTfdgheth
     }
 
     .product-card {
-      background: #111827; /* Darker card */
+      background: #111827;
       border-radius: 16px;
       box-shadow: 0 8px 20px rgba(10, 20, 40, 0.7);
       padding: 24px 20px;
@@ -90,7 +90,7 @@ TESTfdgheth
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(5, 12, 25, 0.88); /* Darker overlay */
+      background: rgba(5, 12, 25, 0.88);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -147,6 +147,22 @@ TESTfdgheth
 
     .modal input::placeholder {
       color: #6b7280;
+    }
+
+    .modal label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      user-select: none;
+    }
+
+    .modal input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
     }
 
     .modal button.submit-button,
@@ -228,7 +244,13 @@ TESTfdgheth
       <h3 id="modalTitle">Input your Discord username</h3>
       <p>We need your Discord username to contact you!</p>
       <input type="text" id="discordUsername" placeholder="Discord#1234" autocomplete="off" />
-      <button class="submit-button" id="submitBtn" onclick="submitPurchase()">Submit</button>
+      
+      <label>
+        <input type="checkbox" id="confirmCheckbox" />
+        I confirm the information is correct.
+      </label>
+
+      <button class="submit-button" id="submitButton" disabled>Submit</button>
     </div>
   </div>
 
@@ -237,92 +259,63 @@ TESTfdgheth
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="verificationTitle">
       <h3 id="verificationTitle">Thank you!</h3>
       <p>Thanks, we will contact you as soon as possible!</p>
-      <button class="ok-button" onclick="closeVerificationModal()">Ok</button>
+      <button class="ok-button" id="okButton">Ok</button>
     </div>
   </div>
 
   <script>
+    let selectedProduct = null;
+
     const modal = document.getElementById('modal');
     const verificationModal = document.getElementById('verificationModal');
-    const discordInput = document.getElementById('discordUsername');
-    const submitBtn = document.getElementById('submitBtn');
-    let selectedKey = null;
+    const discordUsernameInput = document.getElementById('discordUsername');
+    const confirmCheckbox = document.getElementById('confirmCheckbox');
+    const submitButton = document.getElementById('submitButton');
+    const okButton = document.getElementById('okButton');
 
-    function openModal(keyName) {
-      selectedKey = keyName;
-      discordInput.value = '';
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit';
+    function openModal(productName) {
+      selectedProduct = productName;
       modal.classList.add('active');
-      discordInput.focus();
+      verificationModal.classList.remove('active');
+      discordUsernameInput.value = '';
+      confirmCheckbox.checked = false;
+      submitButton.disabled = true;
+      discordUsernameInput.focus();
     }
 
     function closeModal() {
       modal.classList.remove('active');
-      selectedKey = null;
     }
 
-    function openVerificationModal() {
+    // Enable submit button only if checkbox is checked AND username is not empty
+    function validateForm() {
+      submitButton.disabled = !(confirmCheckbox.checked && discordUsernameInput.value.trim() !== '');
+    }
+
+    confirmCheckbox.addEventListener('change', validateForm);
+    discordUsernameInput.addEventListener('input', validateForm);
+
+    submitButton.addEventListener('click', () => {
+      // Optional: Add further validation for Discord username format here
+      if (discordUsernameInput.value.trim() === '') return;
+      closeModal();
+      showVerification();
+    });
+
+    function showVerification() {
       verificationModal.classList.add('active');
     }
 
-    function closeVerificationModal() {
+    okButton.addEventListener('click', () => {
       verificationModal.classList.remove('active');
-    }
-
-    async function submitPurchase() {
-      const discordUsername = discordInput.value.trim();
-
-      if (!discordUsername) {
-        alert('Please enter your Discord username.');
-        discordInput.focus();
-        return;
-      }
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Verifying...';
-
-      const webhookUrl = "https://discord.com/api/webhooks/1384168262199410690/Mf56mxY1uHTQBBNuUghceqLC-qQpDLNjIzrT4isDtqKpSwPi6Xevmsh1hpdpJ-pWwG-X";
-
-      const payload = {
-        embeds: [
-          {
-            title: "New Key Purchase",
-            color: 0x3b82f6,
-            fields: [
-              { name: "Purchased Key", value: selectedKey, inline: true },
-              { name: "Discord Username", value: discordUsername, inline: true }
-            ],
-            timestamp: new Date().toISOString()
-          }
-        ]
-      };
-
-      try {
-        const response = await fetch(webhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) throw new Error(`Webhook error: ${response.status}`);
-
-        closeModal();
-        openVerificationModal();
-      } catch (error) {
-        console.error(error);
-        alert('Failed to send data. Please try again later.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit';
-      }
-    }
-
-    modal.addEventListener('click', e => {
-      if (e.target === modal) closeModal();
     });
 
-    verificationModal.addEventListener('click', e => {
-      if (e.target === verificationModal) closeVerificationModal();
+    // Close modal on ESC key press
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (modal.classList.contains('active')) closeModal();
+        if (verificationModal.classList.contains('active')) verificationModal.classList.remove('active');
+      }
     });
   </script>
 </body>
