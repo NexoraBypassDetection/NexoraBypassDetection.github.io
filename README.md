@@ -1,4 +1,4 @@
-Buy keys below if you dont want to complete the lootlabs * You will have to wait until a STAFF MEMBER contacts you through discord!
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -19,6 +19,7 @@ Buy keys below if you dont want to complete the lootlabs * You will have to wait
       align-items: flex-start;
       min-height: 100vh;
       padding: 40px 20px;
+      position: relative;
     }
 
     .shop-container {
@@ -218,6 +219,57 @@ Buy keys below if you dont want to complete the lootlabs * You will have to wait
     .modal .close-button:hover {
       color: #e2e8f0;
     }
+
+    /* Custom notification */
+    #customNotification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #b91c1c; /* dark red */
+      color: white;
+      border-radius: 14px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 6px 18px rgba(185, 28, 28, 0.8);
+      font-weight: 600;
+      font-size: 1rem;
+      z-index: 1100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      user-select: none;
+      max-width: 320px;
+    }
+    #customNotification.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #customNotification svg {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      stroke: white;
+      stroke-width: 2;
+    }
+    #customNotification button.close-notif {
+      background: transparent;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-left: auto;
+      cursor: pointer;
+      user-select: none;
+      padding: 0;
+      line-height: 1;
+      transition: color 0.2s ease;
+    }
+    #customNotification button.close-notif:hover {
+      color: #fca5a5;
+    }
   </style>
 </head>
 <body>
@@ -243,78 +295,84 @@ Buy keys below if you dont want to complete the lootlabs * You will have to wait
   <div class="modal-overlay" id="modal">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <button class="close-button" aria-label="Close modal" onclick="closeModal()">&times;</button>
-      <h3 id="modalTitle">Input your Discord username</h3>
-      <p>We need your Discord username to contact you!</p>
-      <input type="text" id="discordUsername" placeholder="Discord#1234" autocomplete="off" />
-      
+      <h3 id="modalTitle">Enter Discord Username</h3>
+      <p>Please enter your Discord username (e.g. User#1234) and agree below:</p>
+      <input type="text" id="discordUsernameInput" placeholder="Discord Username" autocomplete="off" />
       <label class="checkbox-label">
         <input type="checkbox" id="agreeCheckbox" />
         By checking this box you agree you mean buninuss and not any form off trolling
       </label>
-      
       <button class="submit-button" id="submitBtn" onclick="submitPurchase()">Submit</button>
     </div>
   </div>
 
-  <!-- Modal: Verification -->
-  <div class="modal-overlay" id="verificationModal">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="verificationTitle">
-      <h3 id="verificationTitle">Thank you!</h3>
-      <p>Thanks, we will contact you as soon as possible!</p>
-      <button class="ok-button" onclick="closeVerificationModal()">Ok</button>
-    </div>
+  <!-- Custom notification -->
+  <div id="customNotification" role="alert" aria-live="assertive" aria-atomic="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+    <span id="notifMessage">RedCross Please checkout the box</span>
+    <button class="close-notif" aria-label="Close notification" onclick="hideNotification()">&times;</button>
   </div>
 
   <script>
     const modal = document.getElementById('modal');
-    const verificationModal = document.getElementById('verificationModal');
-    const discordInput = document.getElementById('discordUsername');
+    const discordUsernameInput = document.getElementById('discordUsernameInput');
     const agreeCheckbox = document.getElementById('agreeCheckbox');
     const submitBtn = document.getElementById('submitBtn');
+    const notif = document.getElementById('customNotification');
+
     let selectedKey = null;
 
-    function openModal(keyName) {
-      selectedKey = keyName;
-      discordInput.value = '';
+    function openModal(key) {
+      selectedKey = key;
+      discordUsernameInput.value = '';
       agreeCheckbox.checked = false;
       submitBtn.disabled = false;
       submitBtn.textContent = 'Submit';
       modal.classList.add('active');
-      discordInput.focus();
+      discordUsernameInput.focus();
     }
 
     function closeModal() {
       modal.classList.remove('active');
-      selectedKey = null;
     }
 
-    function openVerificationModal() {
-      verificationModal.classList.add('active');
+    // Show custom notification
+    function showNotification(message) {
+      const notifMessage = document.getElementById('notifMessage');
+      notifMessage.textContent = message;
+      notif.classList.add('show');
+
+      // Auto-hide after 4 seconds
+      clearTimeout(notif.hideTimeout);
+      notif.hideTimeout = setTimeout(() => {
+        hideNotification();
+      }, 4000);
     }
 
-    function closeVerificationModal() {
-      verificationModal.classList.remove('active');
+    function hideNotification() {
+      notif.classList.remove('show');
     }
 
     async function submitPurchase() {
-      const discordUsername = discordInput.value.trim();
-      const isChecked = agreeCheckbox.checked;
+      const discordUsername = discordUsernameInput.value.trim();
 
-      if (!discordUsername) {
-        alert('Please enter your Discord username.');
-        discordInput.focus();
+      if (discordUsername === '') {
+        showNotification('RedCross Please enter your Discord username');
+        discordUsernameInput.focus();
         return;
       }
-
-      if (!isChecked) {
-        alert('You must agree by checking the box before submitting.');
-        agreeCheckbox.focus();
+      if (!agreeCheckbox.checked) {
+        showNotification('RedCross Please checkout the box');
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Verifying...';
+      submitBtn.textContent = 'Submitting...';
 
+      // Replace with your webhook URL
       const webhookUrl = "https://discord.com/api/webhooks/1384168262199410690/Mf56mxY1uHTQBBNuUghceqLC-qQpDLNjIzrT4isDtqKpSwPi6Xevmsh1hpdpJ-pWwG-X";
 
       const data = {
@@ -341,14 +399,15 @@ Buy keys below if you dont want to complete the lootlabs * You will have to wait
 
         if (response.ok) {
           closeModal();
-          openVerificationModal();
+          // Optionally show a success modal or notification here
+          showNotification('Purchase submitted successfully!');
         } else {
-          alert('Failed to submit. Please try again later.');
+          showNotification('RedCross Failed to submit. Please try again later.');
           submitBtn.disabled = false;
           submitBtn.textContent = 'Submit';
         }
       } catch (error) {
-        alert('Error submitting data. Check your internet connection and try again.');
+        showNotification('RedCross Error submitting data. Check your internet connection and try again.');
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit';
       }
@@ -358,7 +417,7 @@ Buy keys below if you dont want to complete the lootlabs * You will have to wait
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         if (modal.classList.contains('active')) closeModal();
-        if (verificationModal.classList.contains('active')) closeVerificationModal();
+        if (notif.classList.contains('show')) hideNotification();
       }
     });
   </script>
