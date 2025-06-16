@@ -1,4 +1,4 @@
-Purchase valid keys for an limited time period of use below!
+Purchase valid keys for an limited time period of use below! Join our discord server for easier support and communication! https://discord.gg/822Hm8t4QS
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
