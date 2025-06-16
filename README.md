@@ -1,351 +1,175 @@
-<!DOCTYPE html> 
+Buy keys below
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Keys Shop - Discord Username Input</title>
+  <title>Custom Notification Form</title>
   <style>
-    /* Reset & basics */
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #050d1a, #0b1224); /* Darker background */
-      color: #dce3f0;
+      background: #0f172a;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 40px;
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      flex-direction: column;
+      align-items: center;
       min-height: 100vh;
-      padding: 40px 20px;
-      position: relative;
+      margin: 0;
     }
 
-    .shop-container {
-      max-width: 900px;
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 30px;
-    }
-
-    .product-card {
-      background: #111827; /* Darker card */
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(10, 20, 40, 0.7);
-      padding: 24px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      border: 1px solid #1f2937;
-      user-select: none;
-    }
-
-    .product-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 18px 40px rgba(37, 99, 235, 0.4);
-      border-color: #3b82f6;
-    }
-
-    .product-title {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin: 0 0 14px 0;
-      color: #e2e8f0;
-    }
-
-    .product-price {
-      font-size: 1.2rem;
-      margin-bottom: 28px;
-      color: #94a3b8;
-    }
-
-    .purchase-button {
-      background: #3b82f6;
-      border: none;
-      border-radius: 14px;
-      padding: 16px 0;
-      color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 6px 12px rgba(59,130,246,0.5);
-      user-select: none;
-    }
-
-    .purchase-button:hover {
-      background: #2563eb;
-      box-shadow: 0 10px 24px rgba(37,99,235,0.7);
-    }
-
-    .purchase-button:active {
-      background: #1e40af;
-      box-shadow: 0 4px 10px rgba(30,64,175,0.8);
-      transform: scale(0.96);
-    }
-
-    /* Modal styles */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(5, 12, 25, 0.88); /* Darker overlay */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal {
-      background: #111827;
-      border-radius: 16px;
-      padding: 30px 28px;
+    form {
+      background: #1e293b;
+      padding: 24px 32px;
+      border-radius: 8px;
       width: 320px;
-      box-shadow: 0 12px 30px rgba(20,40,80,0.9);
       display: flex;
       flex-direction: column;
-      user-select: none;
-      position: relative;
+      gap: 16px;
     }
 
-    .modal h3 {
-      color: #e2e8f0;
-      margin: 0 0 16px 0;
-      font-weight: 700;
-      font-size: 1.5rem;
-      text-align: center;
+    label {
+      display: flex;
+      flex-direction: column;
+      font-weight: bold;
+      font-size: 14px;
     }
 
-    .modal p {
-      color: #94a3b8;
-      font-size: 0.9rem;
-      margin: 0 0 24px 0;
-      text-align: center;
-    }
-
-    .modal input[type="text"] {
-      padding: 12px 14px;
-      border-radius: 12px;
+    input[type="text"] {
+      margin-top: 6px;
+      padding: 8px 10px;
+      border-radius: 6px;
       border: none;
-      font-size: 1rem;
-      outline: none;
-      background: #1f2937;
-      color: #e2e8f0;
-      box-shadow: inset 0 0 6px rgba(20,40,80,0.8);
-      margin-bottom: 16px;
-      user-select: text;
+      font-size: 14px;
     }
 
-    .modal input::placeholder {
-      color: #6b7280;
+    input[type="checkbox"] {
+      margin-right: 8px;
+      transform: scale(1.3);
+      cursor: pointer;
     }
 
-    .modal label.checkbox-label {
-      color: #dce3f0;
-      font-size: 0.9rem;
-      user-select: none;
-      margin-bottom: 18px;
+    .checkbox-label {
       display: flex;
       align-items: center;
-      gap: 10px;
-    }
-
-    .modal input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-      accent-color: #3b82f6;
+      font-weight: normal;
+      font-size: 13px;
       user-select: none;
     }
 
-    .modal button.submit-button,
-    .modal button.ok-button {
-      background: #3b82f6;
-      border: none;
-      border-radius: 14px;
-      padding: 14px 0;
-      color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 6px 12px rgba(59,130,246,0.6);
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      user-select: none;
-    }
-
-    .modal button.submit-button:hover,
-    .modal button.ok-button:hover {
+    button {
       background: #2563eb;
-      box-shadow: 0 10px 24px rgba(37,99,235,0.8);
-    }
-
-    .modal button.submit-button:active,
-    .modal button.ok-button:active {
-      background: #1e40af;
-      box-shadow: 0 4px 10px rgba(30,64,175,0.9);
-      transform: scale(0.96);
-    }
-
-    .modal button.submit-button:disabled {
-      background: #94a3b8;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
-
-    .modal .close-button {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      background: transparent;
+      color: white;
+      padding: 10px 0;
       border: none;
-      font-size: 1.5rem;
-      color: #94a3b8;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 15px;
       cursor: pointer;
-      user-select: none;
-      transition: color 0.2s ease;
+      transition: background 0.2s ease;
     }
 
-    .modal .close-button:hover {
-      color: #e2e8f0;
+    button:hover {
+      background: #3b82f6;
     }
 
-    /* Custom notification */
-    #customNotification {
+    /* Notification styles */
+    .notification {
       position: fixed;
-      top: 20px;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background: #b91c1c; /* dark red */
+      background-color: #1e293b;
       color: white;
-      border-radius: 14px;
-      padding: 14px 20px;
+      border-radius: 6px;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
       gap: 12px;
-      box-shadow: 0 6px 18px rgba(185, 28, 28, 0.8);
-      font-weight: 600;
-      font-size: 1rem;
-      z-index: 1100;
+      min-width: 280px;
+      max-width: 90vw;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
-      user-select: none;
-      max-width: 320px;
+      font-family: Arial, sans-serif;
+      font-size: 15px;
+      z-index: 9999;
     }
-    #customNotification.show {
+
+    .notification.show {
       opacity: 1;
       pointer-events: auto;
     }
-    #customNotification svg {
-      width: 24px;
-      height: 24px;
+
+    .notification svg {
       flex-shrink: 0;
-      stroke: white;
       stroke-width: 2;
     }
-    #customNotification button.close-notif {
+
+    .notification .close-notif {
       background: transparent;
       border: none;
       color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      margin-left: auto;
+      font-size: 20px;
       cursor: pointer;
-      user-select: none;
       padding: 0;
       line-height: 1;
       transition: color 0.2s ease;
     }
-    #customNotification button.close-notif:hover {
-      color: #fca5a5;
+
+    .notification .close-notif:hover {
+      color: #60a5fa;
     }
   </style>
 </head>
 <body>
-  <main class="shop-container">
-    <div class="product-card">
-      <h2 class="product-title">1 Week Key</h2>
-      <p class="product-price">Price: $1</p>
-      <button class="purchase-button" onclick="openModal('1 Week Key')">Purchase</button>
-    </div>
-    <div class="product-card">
-      <h2 class="product-title">1 Month Key</h2>
-      <p class="product-price">Price: $5</p>
-      <button class="purchase-button" onclick="openModal('1 Month Key')">Purchase</button>
-    </div>
-    <div class="product-card">
-      <h2 class="product-title">1 Year Key</h2>
-      <p class="product-price">Price: $50</p>
-      <button class="purchase-button" onclick="openModal('1 Year Key')">Purchase</button>
-    </div>
-  </main>
 
-  <!-- Modal: Input form -->
-  <div class="modal-overlay" id="modal">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button class="close-button" aria-label="Close modal" onclick="closeModal()">&times;</button>
-      <h3 id="modalTitle">Enter Discord Username</h3>
-      <p>Please enter your Discord username (e.g. User#1234) and agree below:</p>
-      <input type="text" id="discordUsernameInput" placeholder="Discord Username" autocomplete="off" />
-      <label class="checkbox-label">
-        <input type="checkbox" id="agreeCheckbox" />
-        By checking this box you agree you mean buninuss and not any form off trolling
-      </label>
-      <button class="submit-button" id="submitBtn" onclick="submitPurchase()">Submit</button>
-    </div>
-  </div>
+  <form id="purchaseForm" novalidate>
+    <label>
+      Discord Username:
+      <input type="text" id="discordUsername" placeholder="Enter Discord username" autocomplete="off" />
+    </label>
+
+    <label class="checkbox-label">
+      <input type="checkbox" id="agreeCheckbox" />
+      I agree to the terms and conditions
+    </label>
+
+    <button type="submit">Submit Purchase</button>
+  </form>
 
   <!-- Custom notification -->
-  <div id="customNotification" role="alert" aria-live="assertive" aria-atomic="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="18" y1="6" x2="6" y2="18"></line>
-      <line x1="6" y1="6" x2="18" y2="18"></line>
-    </svg>
-    <span id="notifMessage">RedCross Please checkout the box</span>
+  <div id="customNotification" role="alert" aria-live="assertive" aria-atomic="true" class="notification" hidden>
+    <svg id="notifIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"></svg>
+    <span id="notifMessage">Message here</span>
     <button class="close-notif" aria-label="Close notification" onclick="hideNotification()">&times;</button>
   </div>
 
   <script>
-    const modal = document.getElementById('modal');
-    const discordUsernameInput = document.getElementById('discordUsernameInput');
-    const agreeCheckbox = document.getElementById('agreeCheckbox');
-    const submitBtn = document.getElementById('submitBtn');
+    const form = document.getElementById('purchaseForm');
+    const discordInput = document.getElementById('discordUsername');
+    const checkbox = document.getElementById('agreeCheckbox');
+
     const notif = document.getElementById('customNotification');
+    const notifMessage = document.getElementById('notifMessage');
+    const notifIcon = document.getElementById('notifIcon');
 
-    let selectedKey = null;
+    const icons = {
+      redCross: `
+        <line x1="18" y1="6" x2="6" y2="18" stroke="#ef4444" stroke-width="3"></line>
+        <line x1="6" y1="6" x2="18" y2="18" stroke="#ef4444" stroke-width="3"></line>
+      `,
+      blueCheck: `
+        <polyline points="20 6 9 17 4 12" stroke="#3b82f6" stroke-width="3" fill="none"></polyline>
+      `
+    };
 
-    function openModal(key) {
-      selectedKey = key;
-      discordUsernameInput.value = '';
-      agreeCheckbox.checked = false;
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit';
-      modal.classList.add('active');
-      discordUsernameInput.focus();
-    }
-
-    function closeModal() {
-      modal.classList.remove('active');
-    }
-
-    // Show custom notification
-    function showNotification(message) {
-      const notifMessage = document.getElementById('notifMessage');
+    function showNotification(message, isError = false) {
       notifMessage.textContent = message;
+      notifIcon.innerHTML = isError ? icons.redCross : icons.blueCheck;
+      notif.hidden = false;
       notif.classList.add('show');
 
-      // Auto-hide after 4 seconds
       clearTimeout(notif.hideTimeout);
       notif.hideTimeout = setTimeout(() => {
         hideNotification();
@@ -354,72 +178,35 @@
 
     function hideNotification() {
       notif.classList.remove('show');
+      setTimeout(() => {
+        notif.hidden = true;
+      }, 300);
     }
 
-    async function submitPurchase() {
-      const discordUsername = discordUsernameInput.value.trim();
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
 
-      if (discordUsername === '') {
-        showNotification('RedCross Please enter your Discord username');
-        discordUsernameInput.focus();
+      const username = discordInput.value.trim();
+      const isChecked = checkbox.checked;
+
+      if (!username) {
+        showNotification('❌ Please enter your Discord username', true);
+        discordInput.focus();
         return;
       }
-      if (!agreeCheckbox.checked) {
-        showNotification('RedCross Please checkout the box');
+
+      if (!isChecked) {
+        showNotification('❌ Please check the box to agree', true);
         return;
       }
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting...';
+      // If all valid, success notification
+      showNotification('✅ Purchase submitted successfully!', false);
 
-      // Replace with your webhook URL
-      const webhookUrl = "https://discord.com/api/webhooks/1384168262199410690/Mf56mxY1uHTQBBNuUghceqLC-qQpDLNjIzrT4isDtqKpSwPi6Xevmsh1hpdpJ-pWwG-X";
-
-      const data = {
-        content: null,
-        embeds: [
-          {
-            title: "New Keys Shop Purchase",
-            color: 0x3b82f6,
-            fields: [
-              { name: "Discord Username", value: discordUsername, inline: true },
-              { name: "Key Selected", value: selectedKey, inline: true }
-            ],
-            timestamp: new Date().toISOString()
-          }
-        ]
-      };
-
-      try {
-        const response = await fetch(webhookUrl, {
-          method: 'POST',
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-
-        if (response.ok) {
-          closeModal();
-          // Optionally show a success modal or notification here
-          showNotification('Purchase submitted successfully!');
-        } else {
-          showNotification('RedCross Failed to submit. Please try again later.');
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Submit';
-        }
-      } catch (error) {
-        showNotification('RedCross Error submitting data. Check your internet connection and try again.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit';
-      }
-    }
-
-    // Accessibility: Close modal on Escape key press
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        if (modal.classList.contains('active')) closeModal();
-        if (notif.classList.contains('show')) hideNotification();
-      }
+      // Reset form or any other logic here
+      form.reset();
     });
   </script>
+
 </body>
 </html>
