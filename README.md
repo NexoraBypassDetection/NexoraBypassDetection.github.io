@@ -22,7 +22,7 @@
   <p>times.</p>
 
   <script>
-    const COUNTER_SLUG = "your-counter-slug"; // replace this with your actual counter name
+    const COUNTER_SLUG = "VisitCounter"; // your counter slug
     const API_KEY = "ut_e4nlNx1iPMqnRfK8gNKDSqY1Q6HZ6nQ3UswW1U4K"; // your API key
 
     fetch(`https://counterapi.dev/api/v1/counter/${COUNTER_SLUG}/hit`, {
@@ -32,7 +32,10 @@
         "Content-Type": "application/json"
       }
     })
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      return res.json();
+    })
     .then(data => {
       document.getElementById("visits").textContent = data.count;
     })
