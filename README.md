@@ -1,327 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Keys Shop - Discord & Roblox Username Input</title>
-  <style>
-    /* Reset & basics */
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #050d1a, #0b1224);
-      color: #dce3f0;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding: 40px 20px;
-    }
-
-    .shop-container {
-      max-width: 900px;
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 30px;
-    }
-
-    .product-card {
-      background: #111827;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(10, 20, 40, 0.7);
-      padding: 24px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      border: 1px solid #1f2937;
-      user-select: none;
-    }
-
-    .product-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 18px 40px rgba(37, 99, 235, 0.4);
-      border-color: #3b82f6;
-    }
-
-    .product-title {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin: 0 0 14px 0;
-      color: #e2e8f0;
-    }
-
-    .product-price {
-      font-size: 1.2rem;
-      margin-bottom: 28px;
-      color: #94a3b8;
-    }
-
-    .purchase-button {
-      background: #3b82f6;
-      border: none;
-      border-radius: 14px;
-      padding: 16px 0;
-      color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 6px 12px rgba(59,130,246,0.5);
-      user-select: none;
-    }
-
-    .purchase-button:hover {
-      background: #2563eb;
-      box-shadow: 0 10px 24px rgba(37,99,235,0.7);
-    }
-
-    .purchase-button:active {
-      background: #1e40af;
-      box-shadow: 0 4px 10px rgba(30,64,175,0.8);
-      transform: scale(0.96);
-    }
-
-    /* Modal styles */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(5, 12, 25, 0.88);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal {
-      background: #111827;
-      border-radius: 16px;
-      padding: 30px 28px;
-      width: 320px;
-      box-shadow: 0 12px 30px rgba(20,40,80,0.9);
-      display: flex;
-      flex-direction: column;
-      user-select: none;
-      position: relative;
-    }
-
-    .modal h3 {
-      color: #e2e8f0;
-      margin: 0 0 16px 0;
-      font-weight: 700;
-      font-size: 1.5rem;
-      text-align: center;
-    }
-
-    .modal p {
-      color: #94a3b8;
-      font-size: 0.9rem;
-      margin: 0 0 24px 0;
-      text-align: center;
-    }
-
-    .modal input[type="text"] {
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: none;
-      font-size: 1rem;
-      outline: none;
-      background: #1f2937;
-      color: #e2e8f0;
-      box-shadow: inset 0 0 6px rgba(20,40,80,0.8);
-      margin-bottom: 16px;
-      user-select: text;
-    }
-
-    .modal input::placeholder {
-      color: #6b7280;
-    }
-
-    .modal button.submit-button,
-    .modal button.ok-button {
-      background: #3b82f6;
-      border: none;
-      border-radius: 14px;
-      padding: 14px 0;
-      color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 6px 12px rgba(59,130,246,0.6);
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      user-select: none;
-    }
-
-    .modal button.submit-button:hover,
-    .modal button.ok-button:hover {
-      background: #2563eb;
-      box-shadow: 0 10px 24px rgba(37,99,235,0.8);
-    }
-
-    .modal button.submit-button:active,
-    .modal button.ok-button:active {
-      background: #1e40af;
-      box-shadow: 0 4px 10px rgba(30,64,175,0.9);
-      transform: scale(0.96);
-    }
-
-    .modal button.submit-button:disabled {
-      background: #94a3b8;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
-
-    .modal .close-button {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      background: transparent;
-      border: none;
-      font-size: 1.5rem;
-      color: #94a3b8;
-      cursor: pointer;
-      user-select: none;
-      transition: color 0.2s ease;
-    }
-
-    .modal .close-button:hover {
-      color: #e2e8f0;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Key Shop with PayPal.me Links</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #222;
+    color: #eee;
+    text-align: center;
+    padding: 2rem;
+  }
+  .key-card {
+    background: #333;
+    border-radius: 10px;
+    margin: 1rem auto;
+    padding: 1.5rem;
+    width: 300px;
+  }
+  button.purchase-button {
+    background: #ff9900;
+    border: none;
+    color: #222;
+    padding: 10px 20px;
+    margin-top: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  #modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+  }
+  #modal.active {
+    display: flex;
+  }
+  #modal-content {
+    background: #444;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 350px;
+    text-align: left;
+  }
+  #modal-content label,
+  #modal-content input {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  #modal-content input {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+  }
+  #modal-close {
+    float: right;
+    cursor: pointer;
+    color: #f00;
+    font-weight: bold;
+  }
+  #paypal-link {
+    display: inline-block;
+    background: #0070ba;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+  #submit-username {
+    background: #28a745;
+    border: none;
+    color: white;
+    padding: 10px 0;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  #submit-username:disabled {
+    background: #555;
+    cursor: not-allowed;
+  }
+  #message {
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+</style>
 </head>
 <body>
-  <main class="shop-container">
-    <div class="product-card">
-      <h2 class="product-title">1 Week Key</h2>
-      <p class="product-price">Price: $1</p>
-      <button class="purchase-button" onclick="openModal('1 Week Key')">Purchase</button>
-    </div>
-    <div class="product-card">
-      <h2 class="product-title">1 Month Key</h2>
-      <p class="product-price">Price: $5</p>
-      <button class="purchase-button" onclick="openModal('1 Month Key')">Purchase</button>
-    </div>
-    <div class="product-card">
-      <h2 class="product-title">1 Year Key</h2>
-      <p class="product-price">Price: $50</p>
-      <button class="purchase-button" onclick="openModal('1 Year Key')">Purchase</button>
-    </div>
-  </main>
 
-  <!-- Modal: Input form -->
-  <div class="modal-overlay" id="modal">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button class="close-button" aria-label="Close modal" onclick="closeModal()">&times;</button>
-      <h3 id="modalTitle">Input your Discord & Roblox usernames</h3>
-      <p>We need your Discord and Roblox usernames to contact you!</p>
-      <input type="text" id="discordUsername" placeholder="Discord#1234" autocomplete="off" />
-      <input type="text" id="robloxUsername" placeholder="Roblox Username" autocomplete="off" />
-      <button class="submit-button" id="submitBtn" onclick="submitPurchase()">Submit</button>
-    </div>
+<h1>Key Shop</h1>
+
+<div class="key-card">
+  <h2>1 Week Key</h2>
+  <p>Price: $1.00</p>
+  <button class="purchase-button" data-key="1 Week Key">Purchase</button>
+</div>
+
+<div class="key-card">
+  <h2>1 Month Key</h2>
+  <p>Price: $5.00</p>
+  <button class="purchase-button" data-key="1 Month Key">Purchase</button>
+</div>
+
+<div class="key-card">
+  <h2>1 Year Key</h2>
+  <p>Price: $50.00</p>
+  <button class="purchase-button" data-key="1 Year Key">Purchase</button>
+</div>
+
+<!-- Modal for Discord username & PayPal -->
+<div id="modal">
+  <div id="modal-content">
+    <span id="modal-close">&times;</span>
+    <h2 id="modal-title">Purchase</h2>
+    <a href="#" target="_blank" id="paypal-link">Pay with PayPal</a>
+    <label for="discord-username">Enter your Discord username (with #):</label>
+    <input type="text" id="discord-username" placeholder="Example: User#1234" />
+    <button id="submit-username" disabled>Submit</button>
+    <div id="message"></div>
   </div>
+</div>
 
-  <!-- Modal: Verification -->
-  <div class="modal-overlay" id="verificationModal">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="verificationTitle">
-      <h3 id="verificationTitle">Thank you!</h3>
-      <p>Thanks, we will contact you as soon as possible!</p>
-      <button class="ok-button" onclick="closeVerificationModal()">Ok</button>
-    </div>
-  </div>
+<script>
+  const webhookUrl = "YOUR_DISCORD_WEBHOOK_URL";
 
-  <script>
-    const modal = document.getElementById('modal');
-    const verificationModal = document.getElementById('verificationModal');
-    const discordInput = document.getElementById('discordUsername');
-    const robloxInput = document.getElementById('robloxUsername');
-    const submitBtn = document.getElementById('submitBtn');
+  let selectedKey = null;
+  let paypalUrl = null;
 
-    let selectedProduct = null;
+  const modal = document.getElementById("modal");
+  const modalTitle = document.getElementById("modal-title");
+  const discordInput = document.getElementById("discord-username");
+  const submitBtn = document.getElementById("submit-username");
+  const messageDiv = document.getElementById("message");
+  const paypalLink = document.getElementById("paypal-link");
+  const modalClose = document.getElementById("modal-close");
 
-    // Replace these URLs with your real Stripe Payment Links URLs
-    const paymentLinks = {
-      "1 Week Key": "https://buy.stripe.com/test_fZubJ07lr98rcF40M0gbm01",
-      "1 Month Key": "https://buy.stripe.com/test_1MonthKeyPaymentLink",
-      "1 Year Key": "https://buy.stripe.com/test_1YearKeyPaymentLink"
-    };
-
-    function openModal(product) {
-      selectedProduct = product;
-      discordInput.value = '';
-      robloxInput.value = '';
-      submitBtn.disabled = false;
-      modal.classList.add('active');
-      discordInput.focus();
+  // Map keys to PayPal.me URLs
+  function getPaypalUrl(key) {
+    let url = "";
+    switch (key) {
+      case "1 Week Key":
+        url = "https://www.paypal.com/paypalme/kevsterlive/1"; // Replace yourusername and amount
+        break;
+      case "1 Month Key":
+        url = "https://www.paypal.com/paypalme/kevsterlive/5";
+        break;
+      case "1 Year Key":
+        url = "https://www.paypal.com/paypalme/kevsterlive/50";
+        break;
+      default:
+        url = "https://www.paypal.com/paypalme/kevsterlive/1";
     }
+    return url;
+  }
 
-    function closeModal() {
-      modal.classList.remove('active');
-    }
+  // Open modal when purchase button clicked
+  document.querySelectorAll(".purchase-button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedKey = btn.dataset.key;
+      paypalUrl = getPaypalUrl(selectedKey);
 
-    function closeVerificationModal() {
-      verificationModal.classList.remove('active');
-    }
-
-    function submitPurchase() {
-      const discord = discordInput.value.trim();
-      const roblox = robloxInput.value.trim();
-
-      if (!discord || !roblox) {
-        alert('Please enter both your Discord and Roblox usernames.');
-        return;
-      }
-
-      // Here you can add validation for Discord format (e.g. username#1234) if you want
-
-      // Disable the button to prevent multiple clicks
+      modalTitle.textContent = `Purchase ${selectedKey}`;
+      discordInput.value = "";
+      messageDiv.textContent = "";
       submitBtn.disabled = true;
 
-      // Close input modal
-      closeModal();
+      paypalLink.href = paypalUrl;
 
-      // Show verification modal
-      verificationModal.classList.add('active');
+      modal.classList.add("active");
+    });
+  });
 
-      // Log the usernames and product - here you can send it to your server if needed
-      console.log(`User wants to buy: ${selectedProduct}`);
-      console.log(`Discord: ${discord}`);
-      console.log(`Roblox: ${roblox}`);
+  // Close modal
+  modalClose.addEventListener("click", () => {
+    modal.classList.remove("active");
+  });
 
-      // Open Stripe Payment Link in new tab
-      const url = paymentLinks[selectedProduct];
-      if (url) {
-        window.open(url, '_blank');
-      } else {
-        alert('Payment link not configured for this product.');
-      }
+  // Enable submit button only if input has value
+  discordInput.addEventListener("input", () => {
+    submitBtn.disabled = discordInput.value.trim().length === 0;
+  });
+
+  // Submit Discord username and key info to webhook
+  submitBtn.addEventListener("click", () => {
+    const discordUsername = discordInput.value.trim();
+
+    if (!discordUsername) {
+      alert("Please enter your Discord username.");
+      return;
     }
 
-    // Close modals when clicking outside modal content
-    window.addEventListener('click', (event) => {
-      if (event.target === modal) closeModal();
-      if (event.target === verificationModal) closeVerificationModal();
-    });
-
-    // Close modal on Escape key
-    window.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
-        closeModal();
-        closeVerificationModal();
+    // Send data to Discord webhook
+    fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content: null,
+        embeds: [{
+          title: "New Key Purchase",
+          color: 0x00ff00,
+          fields: [
+            { name: "Key Type", value: selectedKey, inline: true },
+            { name: "Discord Username", value: discordUsername, inline: true },
+            { name: "PayPal Link", value: paypalUrl, inline: false }
+          ],
+          timestamp: new Date().toISOString()
+        }]
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        messageDiv.style.color = "lightgreen";
+        messageDiv.textContent = "Thank you! Your information was sent successfully.";
+        submitBtn.disabled = true;
+      } else {
+        throw new Error("Failed to send data");
       }
+    })
+    .catch(error => {
+      messageDiv.style.color = "red";
+      messageDiv.textContent = "Error sending information. Please try again.";
+      console.error(error);
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>
