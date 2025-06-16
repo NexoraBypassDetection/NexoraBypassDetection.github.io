@@ -254,11 +254,11 @@
     let selectedKey = null;
 
     // Your Stripe publishable key here (replace with your actual key)
-    const stripe = Stripe('pk_test_XXXXXXXXXXXXXXXXXXXXXXXX'); 
+    const stripe = Stripe('pk_test_51RVZ74CzsKbGXHqjyfTCtW5lriI6ENdhmXJlWYYlU8vp5ZBYCF5fSManbUA8yeNXHKLrmgzUbYlhwwWBG31cz2OA00CXFJKtty'); 
 
     // Replace these with your actual Stripe Price IDs for each product
     const priceIDs = {
-      '1 Week Key': 'price_1XXXXXX1',  
+      '1 Week Key': 'price_1RagieCzsKbGXHqjSGrGHmDO',  
       '1 Month Key': 'price_1XXXXXX2',
       '1 Year Key': 'price_1XXXXXX3'
     };
