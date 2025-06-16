@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+Do not remove the data in the lootlabs link, unless you will be redricted here!
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
