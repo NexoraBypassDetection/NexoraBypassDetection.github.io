@@ -1,5 +1,5 @@
 Purchase valid keys for an limited time period of use below! Join our discord server for easier support and communication! <a href="https://discord.gg/822Hm8t4QS">Join Server</a>
-<img src="https://media.discordapp.net/attachments/1220824376123850752/1384595484383121508/image.png?ex=68530088&is=6851af08&hm=1f8db78d196fc1ded3a583cf62464322baf0188a284646ddb6b0bfa1db1ab114&=&format=webp&quality=lossless&width=1008&height=579" alt="Logo">
+<link rel="icon" type="image/png" href="https://media.discordapp.net/attachments/1220824376123850752/1384595484383121508/image.png?ex=68530088&is=6851af08&hm=1f8db78d196fc1ded3a583cf62464322baf0188a284646ddb6b0bfa1db1ab114&=&format=webp&quality=lossless&width=1008&height=579">
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
