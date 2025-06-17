@@ -1,4 +1,1 @@
-<head>
-  <title>My Website</title>
-  <link rel="icon" type="image/png" href="https://media.discordapp.net/attachments/1220824376123850752/1384595484383121508/image.png">
-</head>
+<link rel="icon" href="https://media.discordapp.net/attachments/1220824376123850752/1384595484383121508/image.png?ex=68530088&is=6851af08&hm=1f8db78d196fc1ded3a583cf62464322baf0188a284646ddb6b0bfa1db1ab114&=&format=webp&quality=lossless&width=1008&height=579" type="image/png">
