@@ -15,12 +15,14 @@
     }
 
     .text {
-      font-size: 6rem;
-      font-weight: 700;
-      color: #001f4d; /* Dark blue text */
+      font-size: 12rem; /* Bigger text */
+      font-weight: 900;
+      color: #001f4d; /* Dark blue */
       text-shadow:
-        1px 1px 2px #000a1a,
-        -1px -1px 2px #000a1a;
+        0 0 20px #001f4d,
+        0 0 40px #001f4d,
+        0 0 60px #001f4d,
+        0 0 80px #001f4d;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
   </style>
